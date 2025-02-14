@@ -1,0 +1,19 @@
+specVersion: 1.0.0
+description: jupiter-dex Substreams-powered-Subgraph
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: substreams
+    name: jupiter-dex
+    network: solana-mainnet-beta
+    source:
+      package:
+        moduleName: map_filtered_transactions
+        file: ../jupiter-dex-v0.1.0.spkg
+    mapping:
+      apiVersion: 0.0.7
+      kind: substreams/graph-entities
+      file: ./src/mappings.ts
+      handler: handleTriggers
