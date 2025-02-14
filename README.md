@@ -97,9 +97,9 @@ The subgraph uses the Solana DEX Trades Substreams package:
 source:
   package:
     moduleName: map_trades
-    file: substreams://streamingfast.dev/solana-dex-trades/v1.0.13
+    file: graph://solana-dex-trades/v1.0.13
 
-Note: We use the `substreams://` URL format which is natively supported by Graph Node for resolving Substreams packages.
+Note: We use the Graph Node's registry to resolve the Solana DEX trades Substreams package.
 ```
 
 Note: We use StreamingFast's official Solana DEX trades Substreams package to process trades, which we then transform into our schema entities.
