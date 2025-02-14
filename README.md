@@ -96,10 +96,10 @@ The subgraph uses the Solana DEX Trades Substreams package:
 ```yaml
 source:
   package:
-    moduleName: map_trades
-    file: https://github.com/TheGraph-Protocol/solana-dex-substreams/releases/download/v1.0.0/solana-dex-v1.0.0.spkg
+    moduleName: map_block
+    file: https://github.com/streamingfast/substreams-solana-dex-trades/releases/download/v1.0.13/solana-dex-trades-v1.0.13.spkg
 
-Note: We use the `map_trades` module which processes Solana DEX trades and maps them to our schema entities.
+Note: We use the Substreams Triggers approach where we consume the `map_block` module's output and transform it into our schema entities using AssemblyScript in our mappings.ts file.
 ```
 
 This package provides comprehensive DEX trade tracking on Solana, with two main modules:
