@@ -97,7 +97,7 @@ The subgraph uses the Solana DEX Trades Substreams package:
 source:
   package:
     moduleName: map_block
-    file: ./dex-trades.spkg
+    file: https://registry.streamingfast.io/solana/dex-trades/v1.0.13/tl-solana-dex-trades-v1.0.13.spkg
 ```
 
 This package provides comprehensive DEX trade tracking on Solana, with two main modules:
