@@ -11,7 +11,7 @@ dataSources:
     source:
       package:
         moduleName: map_trades
-        file: https://spkg.io/streamingfast/solana-dex-trades-v1.0.13.spkg
+        file: substreams://streamingfast.dev/solana-dex-trades/v1.0.13
     mapping:
       apiVersion: 0.0.7
       kind: substreams/graph-entities
