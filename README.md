@@ -1,24 +1,112 @@
-# Substreams-powered Subgraph 
+# Jupiter DEX Subgraph
 
-## Modules
+This subgraph indexes Jupiter DEX activity on Solana using Substreams technology.
 
-_Describe important modules here_
+## Architecture
 
-## Develop
+### Substreams Modules
 
-* Make sure that you have a graph-node running locally (or set LOCAL_GRAPH_NODE_HOSTNAME)
-* You can use the 'devcontainer' from https://github.com/streamingfast/substreams-starter  to set this up for you!
+The subgraph consumes data from two main Substreams modules:
 
-```bash
-npm install
-npm run generate
-npm run deploy-local
+1. `map_block_before_lookup` module:
+   - Input: `sf.solana.type.v1.Block`
+   - Output: `sf.solana.dex.trades.v1.Output`
+   - Purpose: Initial block processing before address lookups
+   - Hash: `ec16ccfb31e15db4f5ada823c9d3dfb54f1c001f`
 
-# rince and repeat
-npm run remove-local
+2. `map_block` module:
+   - Input: `sf.solana.type.v1.Block`
+   - Output: `sf.solana.dex.trades.v1.Output`
+   - Purpose: Main block processing with resolved addresses
+   - Hash: `d5c2da3df75affd153d111cedacdaeb93d8f2735`
+
+The modules process Solana blocks to extract:
+- Jupiter DEX trades/swaps
+- Pool creations and updates
+- Token transfers and price data
+
+### Data Flow
+
+1. Solana Block → Substreams Modules
+   - Raw blocks are processed to identify Jupiter DEX transactions
+   - Addresses are resolved and transaction data is extracted
+   - Trade information is formatted into the `sf.solana.dex.trades.v1.Output` structure
+
+2. Substreams → Subgraph Entities
+   - The subgraph consumes the processed data via `map_filtered_transactions`
+   - Data is transformed into the following entities:
+     - Protocol: Overall Jupiter DEX statistics
+     - Market: Trading pair information and metrics
+     - Token: Individual token data and volumes
+     - Swap: Individual trade/swap events
+
+## Schema
+
+### Protocol
+Tracks overall protocol metrics:
+- Total volume
+- Unique users
+- Version information
+
+### Market
+Represents trading pairs:
+- Token pair information
+- Volume statistics
+- Swap counts
+
+### Token
+Individual token data:
+- Symbol and name
+- Decimals
+- Trading volume
+
+### Swap
+Individual trade events:
+- Input/output amounts
+- USD values
+- User information
+- Timestamps
+
+## Example Queries
+
+```graphql
+{
+  # Get protocol stats
+  protocol(id: "jupiter") {
+    totalVolumeUSD
+    totalUniqueUsers
+  }
+  
+  # Get top markets
+  markets(
+    first: 5
+    orderBy: volumeUSD
+    orderDirection: desc
+  ) {
+    name
+    volumeUSD
+    swapCount
+  }
+}
 ```
 
-## Deploy
+## Development
 
-* To studio: `npm run deploy-studio`
-* To the network: `npm run publish`
+The subgraph uses the following Substreams package:
+```yaml
+source:
+  package:
+    moduleName: map_filtered_transactions
+    file: ../jupiter-dex-v0.1.0.spkg
+```
+
+To rebuild the subgraph:
+```bash
+graph codegen
+graph build
+```
+
+To deploy:
+```bash
+graph deploy --studio jupiter-dex
+```
