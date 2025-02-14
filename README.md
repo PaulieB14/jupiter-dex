@@ -96,11 +96,29 @@ The subgraph uses the Solana DEX Trades Substreams package:
 ```yaml
 source:
   package:
-    moduleName: map_block
-    file: https://github.com/streamingfast/substreams-solana-dex-trades/releases/download/v1.0.13/solana-dex-trades-v1.0.13.spkg
-
-Note: We use the Substreams Triggers approach where we consume the `map_block` module's output and transform it into our schema entities using AssemblyScript in our mappings.ts file.
+    moduleName: map_trades
+    file: https://spkg.io/streamingfast/solana-dex-trades-v1.0.13.spkg
 ```
+
+Note: We use StreamingFast's official Solana DEX trades Substreams package to process trades, which we then transform into our schema entities.
+
+## Deployment to The Graph Network
+
+To deploy this subgraph to the decentralized network:
+
+1. Ensure you have ETH on Arbitrum for the deployment transaction
+2. Run the following command:
+   ```bash
+   graph publish --node https://api.thegraph.com/deploy/ jupiter-dex
+   ```
+3. Open the browser window when prompted
+4. Fill in the subgraph details in the web interface
+5. Choose "The Graph Network" as the deployment target
+6. Sign the transaction with your wallet
+
+After deployment, indexers can begin processing your subgraph and you can query it through The Graph gateway.
+
+Visit The Graph Explorer to monitor your subgraph's status and performance.
 
 This package provides comprehensive DEX trade tracking on Solana, with two main modules:
 - `map_block_before_lookup`: Initial processing of trades before address resolution

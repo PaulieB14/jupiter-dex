@@ -10,8 +10,8 @@ dataSources:
     network: solana-mainnet-beta
     source:
       package:
-        moduleName: map_block
-        file: https://github.com/streamingfast/substreams-solana-dex-trades/releases/download/v1.0.13/solana-dex-trades-v1.0.13.spkg
+        moduleName: map_trades
+        file: https://spkg.io/streamingfast/solana-dex-trades-v1.0.13.spkg
     mapping:
       apiVersion: 0.0.7
       kind: substreams/graph-entities
