@@ -10,8 +10,8 @@ dataSources:
     network: solana-mainnet-beta
     source:
       package:
-        moduleName: map_filtered_transactions
-        file: ../jupiter-dex-v0.1.0.spkg
+        moduleName: map_block
+        file: https://substreams.dev/packages/tl-solana-dex-trades-1-0-13/v1.0.13
     mapping:
       apiVersion: 0.0.7
       kind: substreams/graph-entities

@@ -92,13 +92,19 @@ Individual trade events:
 
 ## Development
 
-The subgraph uses the following Substreams package:
+The subgraph uses the Solana DEX Trades Substreams package:
 ```yaml
 source:
   package:
-    moduleName: map_filtered_transactions
-    file: ../jupiter-dex-v0.1.0.spkg
+    moduleName: map_block
+    file: https://substreams.dev/packages/tl-solana-dex-trades-1-0-13/v1.0.13
 ```
+
+This package provides comprehensive DEX trade tracking on Solana, with two main modules:
+- `map_block_before_lookup`: Initial processing of trades before address resolution
+- `map_block`: Full trade processing with resolved addresses
+
+We use the `map_block` module as it provides complete trade information with resolved addresses.
 
 To rebuild the subgraph:
 ```bash
