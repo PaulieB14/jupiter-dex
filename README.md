@@ -96,8 +96,10 @@ The subgraph uses the Solana DEX Trades Substreams package:
 ```yaml
 source:
   package:
-    moduleName: map_block
-    file: https://github.com/streamingfast/substreams-solana-dex-trades/releases/download/v1.0.13/tl-solana-dex-trades-v1.0.13.spkg
+    moduleName: graph_out
+    file: https://spkg.io/streamingfast/solana-dex-trades-v1.0.13.spkg
+
+Note: We use the `graph_out` module which is specifically designed for Graph Protocol integration.
 ```
 
 This package provides comprehensive DEX trade tracking on Solana, with two main modules:
