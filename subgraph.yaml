@@ -10,8 +10,8 @@ dataSources:
     network: solana-mainnet-beta
     source:
       package:
-        moduleName: graph_out
-        file: https://spkg.io/streamingfast/solana-dex-trades-v1.0.13.spkg
+        moduleName: map_trades
+        file: https://github.com/TheGraph-Protocol/solana-dex-substreams/releases/download/v1.0.0/solana-dex-v1.0.0.spkg
     mapping:
       apiVersion: 0.0.7
       kind: substreams/graph-entities
