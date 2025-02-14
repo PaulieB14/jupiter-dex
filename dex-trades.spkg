@@ -1,0 +1,162 @@
+<!doctype html><html data-theme="emerald" lang="en"><head><title>Substreams | Not Found</title><link rel="icon" href="/static/images/favicon.svg"><link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css"><link href="/static/css/style.css" rel="stylesheet" type="text/css"><script src="https://cdn.tailwindcss.com"></script><meta name="view-transition" content="same-origin"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"><script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.6/lottie.min.js"></script><script src="/static/script/tailwind.config.js"></script><script src="https://unpkg.com/htmx.org@2.0.3"></script><!-- Mobile-Friendly Meta Tags --><meta name="theme-color" content="#0c0a1d" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0c0a1d" media="(prefers-color-scheme: dark)"><meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Robots Meta Tag --><meta name="robots" content="index, follow"><script>
+				window['_fs_host'] = 'fullstory.com';
+				window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
+				window['_fs_org'] = 'o-1XZND5-na1';
+				window['_fs_namespace'] = 'FS';
+				!function(m,n,e,t,l,o,g,y){var s,f,a=function(h){
+				return!(h in m)||(m.console&&m.console.log&&m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].'),!1)}(e)
+				;function p(b){var h,d=[];function j(){h&&(d.forEach((function(b){var d;try{d=b[h[0]]&&b[h[0]](h[1])}catch(h){return void(b[3]&&b[3](h))}
+				d&&d.then?d.then(b[2],b[3]):b[2]&&b[2](d)})),d.length=0)}function r(b){return function(d){h||(h=[b,d],j())}}return b(r(0),r(1)),{
+				then:function(b,h){return p((function(r,i){d.push([b,h,r,i]),j()}))}}}a&&(g=m[e]=function(){var b=function(b,d,j,r){function i(i,c){
+				h(b,d,j,i,c,r)}r=r||2;var c,u=/Async$/;return u.test(b)?(b=b.replace(u,""),"function"==typeof Promise?new Promise(i):p(i)):h(b,d,j,c,c,r)}
+				;function h(h,d,j,r,i,c){return b._api?b._api(h,d,j,r,i,c):(b.q&&b.q.push([h,d,j,r,i,c]),null)}return b.q=[],b}(),y=function(b){function h(h){
+				"function"==typeof h[4]&&h[4](new Error(b))}var d=g.q;if(d){for(var j=0;j<d.length;j++)h(d[j]);d.length=0,d.push=h}},function(){
+				(o=n.createElement(t)).async=!0,o.crossOrigin="anonymous",o.src="https://"+l,o.onerror=function(){y("Error loading "+l)}
+				;var b=n.getElementsByTagName(t)[0];b&&b.parentNode?b.parentNode.insertBefore(o,b):n.head.appendChild(o)}(),function(){function b(){}
+				function h(b,h,d){g(b,h,d,1)}function d(b,d,j){h("setProperties",{type:b,properties:d},j)}function j(b,h){d("user",b,h)}function r(b,h,d){j({
+				uid:b},d),h&&j(h,d)}g.identify=r,g.setUserVars=j,g.identifyAccount=b,g.clearUserCookie=b,g.setVars=d,g.event=function(b,d,j){h("trackEvent",{
+				name:b,properties:d},j)},g.anonymize=function(){r(!1)},g.shutdown=function(){h("shutdown")},g.restart=function(){h("restart")},
+				g.log=function(b,d){h("log",{level:b,msg:d})},g.consent=function(b){h("setIdentity",{consent:!arguments.length||b})}}(),s="fetch",
+				f="XMLHttpRequest",g._w={},g._w[f]=m[f],g._w[s]=m[s],m[s]&&(m[s]=function(){return g._w[s].apply(this,arguments)}),g._v="2.0.0")
+				}(window,document,window._fs_namespace,"script",window._fs_script);
+			</script><script src="/static/script/rain.js"></script></head><body class="bg-gradient-to-l from-dark-500 to-primary-900 text-primary-50 flex flex-col"><div class="navbar w-full relative z-[200] max-lg:sticky max-lg:top-0 max-lg:bg-dark-500 max-lg:border-b max-lg:border-dark-400"><div class="container mx-auto flex items-center justify-between"><div class="hidden flex-1 max-lg:inline-block"><input type="checkbox" id="menu-toggle" class="hidden"> <label for="menu-toggle" class="flex items-center justify-center gap-1 text-white h-9 w-9 px-1 py-1 cursor-pointer border border-white/5 bg-white/5 hover:bg-white/10 hover:border hover:border-white/10 backdrop-blur-sm rounded-lg"><i data-lucide="menu" class="h-4 w-4"></i></label><div id="dropdown-content" class="!bg-dark-500/85 rounded-none backdrop-blur-md right-0 w-full fixed z-50 top-0 left-0 w-full h-full bg-white rounded-md shadow-lg hidden transition-all duration-300"><div class="p-4"><ul class="flex max-lg:flex-col max-lg:justify-center max-lg:h-full max-lg:text-2xl text-base gap-4 items-center"><li><a href="/" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1">Home</a></li><li><a href="/packages" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1 border-b-2 border-white !text-white">Packages</a></li><li><a href="/bounties" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1">Bounties</a></li><li><a href="/pricing" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1">Pricing</a></li><li><a target="_blank" href="https://docs.substreams.dev" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1">Docs</a></li></ul><i data-lucide="x" class="h-10 w-10 bg-primary-50/5 border border-primary-50/5 hover:bg-primary-50/10 p-2 rounded-lg cursor-pointer absolute top-4 right-4" onclick="document.getElementById(&#39;menu-toggle&#39;).checked = false"></i></div></div></div><div class="flex-1 max-lg:flex max-lg:justify-center"><a href="/"><img loading="lazy" src="/static/images/substreams_logo_white.svg" alt="Substream&#39;s logo" class="h-6"></a></div><div class="navbar-center hidden lg:flex"><ul class="flex max-lg:flex-col max-lg:justify-center max-lg:h-full max-lg:text-2xl text-base gap-4 items-center"><li><a href="/" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1">Home</a></li><li><a href="/packages" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1 border-b-2 border-white !text-white">Packages</a></li><li><a href="/bounties" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1">Bounties</a></li><li><a href="/pricing" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1">Pricing</a></li><li><a target="_blank" href="https://docs.substreams.dev" class="!bg-transparent text-white/80 hover:text-white px-1 pb-1">Docs</a></li></ul></div><div class="flex-1 justify-end flex gap-3"><a href="/auth/login"><div class="flex items-center justify-center gap-1 text-white h-9 max-lg:w-9 max-lg:p-0 px-3 py-1 cursor-pointer border border-primary-500 bg-gradient-to-r from-primary-500/40 hover:bg-primary-500/40 transition-all hover:border hover:border-primary-400 backdrop-blur-sm rounded-lg"><i data-lucide="github" class="h-4 w-4"></i><div class="max-lg:hidden">Sign in</div></div></a></div></div></div><dialog id="publish" class="modal"><div class="modal-box !bg-gradient-to-l !from-dark-500 !to-primary-900 mt-4 border border-primary-50/10 rounded-xl shadow-xl"><div class="flex justify-between items-center"><h3 class="font-bold text-lg mb-4">How to publish</h3><div class="modal-action !m-0 absolute top-0 right-0"><form method="dialog" class="!m-4"><i data-lucide="x" class="h-6 w-6 cursor-pointer" onclick="document.getElementById(&#39;publish&#39;).close()"></i></form></div></div><p class="mb-4">To publish a new package to the registry, install `substreams` on your computer and run:</p><div class="markdown-content"><pre><code>substreams publish</code></pre></div></div></dialog><div class="flex-1" style="view-transition-name: main-content"><div><div class="bg-amber-500/10 h-[600px] max-lg:w-full w-[600px] absolute top-0 mt-[-100px] right-0 z-0 rounded-lg blur-[200px]"></div><div class="bg-primary-500/10 h-[600px] max-lg:w-full w-[600px] absolute top-0 left-0 z-0 rounded-lg blur-[200px]"></div><div class="container mx-auto text-primary-50"><div class="hero my-24"><div class="hero-content text-center"><div class="max-w-4xl flex flex-col gap-5"><p class="text-lg mx-auto max-w-xl">Page not found</p></div></div></div></div></div></div><footer class="bg-dark-600 border-t border-primary-300/20 py-20 z-50"><div class="container mx-auto max-lg:!px-6"><div class="flex max-lg:flex-col max-lg:items-center w-full justify-between"><div class="flex flex-col gap-4 max-lg:items-center max-lg:justify-center"><a href="/"><img loading="lazy" src="/static/images/substreams_logo_white.svg" alt="Substream&#39;s logo" class="h-6"></a><div class="flex gap-2"><a href="https://x.com/streamingfastio" target="_blank" class="uppercase inline-flex justify-center gap-1 items-center text-xs bg-primary-50/5 hover:bg-primary-50/10 px-2 py-1 rounded-lg gradient-border-mask h-9 w-9"><img loading="lazy" src="/static/images/x.svg" alt="X&#39;s logo" class="h-3 w-3"></a> <a href="https://discord.gg/jZwqxJAvRs" target="_blank" class="uppercase inline-flex justify-center gap-1 items-center text-xs bg-primary-50/5 hover:bg-primary-50/10 px-2 py-1 rounded-lg gradient-border-mask h-9 w-9"><img loading="lazy" src="/static/images/discord.svg" alt="Discord&#39;s logo" class="h-4 w-4"></a> <a href="https://github.com/streamingfast/substreams" target="_blank" class="uppercase inline-flex justify-center gap-1 items-center text-xs bg-primary-50/5 hover:bg-primary-50/10 px-2 py-1 rounded-lg gradient-border-mask h-9 w-9"><img loading="lazy" src="/static/images/github.svg" alt="Github&#39;s logo" class="h-4 w-4"></a></div></div><div class="flex flex-col max-lg:text-center max-lg:mt-4 text-end"><a href="/">Home</a> <a href="/packages">Packages</a><a target="_blank" href="https://docs.substreams.dev/">Docs</a></div></div><div class="bg-primary-50/5 h-[1px] w-full my-8"></div><div class="flex max-lg:flex-col max-lg:gap-3 justify-between items-center"><div class="">© 2025 StreamingFast Platform Inc. All rights reserved.</div><div class="flex max-lg:flex-col items-center lg:gap-8"><a href="https://www.streamingfast.io/privacy-policy" target="_blank">Privacy Policy</a> <a href="https://www.streamingfast.io/terms-of-service" target="_blank">Terms of Service</a> <a href="https://thegraph.com" target="_blank" class="max-lg:mt-8"><img src="/static/images/PoweredByTheGraph.svg" alt="Powered by The Graph" class="h-12"></a></div></div></div></footer><script>
+			// Lucide icon
+			lucide.createIcons();
+
+			// Lottie animation
+			lottie.loadAnimation({
+				container: document.getElementById('lottie-container'),
+				renderer: 'svg',
+				loop: true,
+				autoplay: true,
+				path: '/static/images/bounties-2.json'
+			});
+			
+			document.addEventListener('DOMContentLoaded', () => {
+				const video = document.querySelector('video[data-src]');
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							video.src = video.getAttribute('data-src');
+							observer.disconnect();
+						}
+					});
+				});
+				observer.observe(video);
+			});
+		</script><script>
+			const marqueeContent = document.querySelector('.marquee-content');
+			let clone = marqueeContent.cloneNode(true);
+			marqueeContent.parentElement.appendChild(clone);
+
+			let marquee = document.querySelector('.marquee');
+			let speed = 0.3;
+			let marqueeWidth = marquee.scrollWidth;
+
+			let position = 0;
+
+			function scrollMarquee() {
+				position -= speed;
+				if (Math.abs(position) >= marqueeWidth / 2) {
+				position = 0;
+				}
+				marqueeContent.style.transform = `translateX(${position}px)`;
+				clone.style.transform = `translateX(${position}px)`;
+				requestAnimationFrame(scrollMarquee);
+			}
+
+			marquee.addEventListener('mouseover', () => {
+				speed = 0;
+			});
+
+			marquee.addEventListener('mouseout', () => {
+				speed = 0.3;
+			});
+
+			scrollMarquee();
+		</script><script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const slider = document.getElementById('storageSlider');
+				const costDisplay = document.getElementById('costDisplay');
+				const progressBar = document.getElementById('progressBar');
+				const sliderThumb = document.getElementById('sliderThumb');
+				const freeBadge = document.getElementById('freeBadge');
+				const graduationsContainer = document.getElementById('graduations');
+				const tbValuesContainer = document.getElementById('tbValues');
+				const setupPlanButton = document.getElementById('setupPlanButton');
+				const getInTouchText = document.getElementById('getInTouchText');
+
+				const graduations = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+
+				graduations.forEach(tb => {
+					const graduation = document.createElement('div');
+					graduation.className = 'absolute w-px h-5 bg-white/20';
+					graduation.style.left = `${(tb/52) * 100}%`;
+					graduation.style.top = '52%';
+					graduation.style.transform = 'translateY(-52%)';
+					graduationsContainer.appendChild(graduation);
+
+					const tbValue = document.createElement('span');
+					tbValue.textContent = `${tb}TiB`;
+					tbValue.style.position = 'absolute';
+					tbValue.style.left = `${(tb/52) * 100}%`;
+					tbValue.style.transform = 'translateX(-52%)';
+					tbValuesContainer.appendChild(tbValue);
+				});
+
+				function calculateCost(tb) {
+					if (tb <= 1) {
+					return 'FREE';
+					}
+					const billedTb = tb - 1;
+					const billedGiB = billedTb * 1024;
+					const cost = billedGiB * 0.025;
+					return `$${cost.toFixed(2)}`;
+				}
+
+				slider.addEventListener('input', () => {
+					const value = parseInt(slider.value);
+					const percentage = (value / 50) * 100;
+
+					const cost = calculateCost(value);
+					costDisplay.textContent = cost;
+					progressBar.style.width = `${percentage}%`;
+					sliderThumb.style.left = `${percentage}%`;
+
+					if (freeBadge) {
+					freeBadge.style.display = value <= 1 ? 'flex' : 'none';
+					}
+
+					if (value > 40) {
+						setupPlanButton.innerText = "Get in Touch";
+						setupPlanButton.classList.add('get-in-touch-slider');
+						setupPlanButton.href = "https://forms.gle/rEJQaaDJAC1UMPhy6";
+						setupPlanButton.target = "_blank";
+						getInTouchText.classList.remove('hidden');
+					} else {
+						setupPlanButton.innerText = "Set up plan";
+						setupPlanButton.classList.remove('get-in-touch-slider');
+						getInTouchText.classList.add('hidden');
+						setupPlanButton.href = "https://thegraph.market";
+						setupPlanButton.target = "_blank";
+					}
+				});
+			});
+		</script></body><script>
+			document.addEventListener("DOMContentLoaded", function () {
+				const stickyContainer = document.getElementById("stickyContainer");
+				const offset = stickyContainer.offsetTop;
+
+				window.addEventListener("scroll", function () {
+					if (window.innerWidth >= 768) {
+						if (window.scrollY >= offset) {
+							stickyContainer.classList.add("sticky-package");
+						} else {
+							stickyContainer.classList.remove("sticky-package");
+						}
+					} else {
+						stickyContainer.classList.remove("sticky-package");
+					}
+				});
+			});
+		</script></html>
