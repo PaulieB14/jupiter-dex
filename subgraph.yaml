@@ -1,17 +1,17 @@
 specVersion: 1.0.0
-description: jupiter-dex Substreams-powered-Subgraph
+description: Solana SPL Token Substreams-powered-Subgraph
 indexerHints:
   prune: auto
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: substreams
-    name: jupiter-dex
+    name: my_project_sol
     network: solana-mainnet-beta
     source:
       package:
-        moduleName: map_trades
-        file: graph://solana-dex-trades/v1.0.13
+        moduleName: map_block
+        file: ./solana-spl-token-v0.1.0.spkg
     mapping:
       apiVersion: 0.0.7
       kind: substreams/graph-entities

@@ -1,0 +1,15 @@
+specVersion: v0.1.0
+package:
+  name: my_project_sol
+  version: v0.1.0
+imports:
+  solana: https://github.com/streamingfast/substreams-solana-spl-token/raw/master/tokens/solana-spl-token-v0.1.0.spkg
+modules:
+  - name: map_spl_transfers
+    use: solana:map_block
+    initialBlock: 260000082
+  - name: map_transactions_by_programid
+    use: solana:solana:transactions_by_programid_without_votes
+network: solana-mainnet-beta
+params:
+  map_spl_transfers: token_contract:orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE

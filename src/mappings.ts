@@ -1,38 +1,52 @@
-import { Protobuf } from "as-proto/assembly";
-import { Transactions as protoTransactions } from "./pb/sf/substreams/solana/v1/Transactions";
-import { Protocol, Market, Token, Swap } from "../generated/schema";
-import { BigInt, log, crypto, Bytes, BigDecimal } from "@graphprotocol/graph-ts";
+import { BigInt, BigDecimal } from "@graphprotocol/graph-ts"
+import { Protocol, Market, Token, Swap } from "../generated/schema"
+import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
 
-export function handleTriggers(bytes: Uint8Array): void {
-  const input = Protobuf.decode<protoTransactions>(bytes, protoTransactions.decode);
-  
+// Jupiter contract addresses
+const JUPITER_SWAP_ADDRESS = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+const JUPITER_LIMIT_ORDER_ADDRESS = "jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu"
+const JUPITER_DCA_ADDRESS = "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M"
+
+export function handleTriggers(data: Transactions): void {
   // Initialize Protocol if it doesn't exist
-  let protocol = Protocol.load("jupiter");
+  let protocol = Protocol.load("jupiter")
   if (!protocol) {
-    protocol = new Protocol("jupiter");
-    protocol.name = "Jupiter";
-    protocol.version = "v6";
-    protocol.totalVolumeUSD = BigDecimal.fromString("0");
-    protocol.totalUniqueUsers = BigInt.fromI32(0);
-    protocol.lastUpdateTimestamp = BigInt.fromI32(0);
-    protocol.save();
+    protocol = new Protocol("jupiter")
+    protocol.name = "Jupiter"
+    protocol.version = "v6"
+    protocol.totalVolumeUSD = BigDecimal.fromString("0")
+    protocol.totalUniqueUsers = BigInt.fromI32(0)
+    protocol.lastUpdateTimestamp = BigInt.fromI32(0)
+    protocol.save()
   }
 
   // Process transactions
-  for (let i = 0; i < input.transactions.length; i++) {
-    const confirmedTx = input.transactions[i];
-    if (!confirmedTx.transaction || !confirmedTx.meta) continue;
+  for (let i = 0; i < data.transactions.length; i++) {
+    const tx = data.transactions[i]
+    if (!tx.transaction || !tx.meta) continue
 
-    // Update protocol timestamp using slot number as a proxy for time
-    // In a real implementation, you would want to extract the actual timestamp
-    protocol.lastUpdateTimestamp = BigInt.fromI32(i); // Placeholder
-    protocol.save();
+    const transaction = tx.transaction!
+    const message = transaction.message
+    if (!message) continue
 
-    // Here you would implement the logic to:
-    // 1. Extract swap information from the transaction and meta
-    // 2. Create/update Market entities
-    // 3. Create/update Token entities
-    // 4. Create Swap entities
-    // 5. Update protocol statistics
+    // Check if transaction involves Jupiter contracts
+    const accountKeys = message.accountKeys
+    for (let j = 0; j < accountKeys.length; j++) {
+      const accountKey = accountKeys[j]
+      if (!accountKey) continue
+
+      const address = accountKey.toString()
+      if (address == JUPITER_SWAP_ADDRESS || 
+          address == JUPITER_LIMIT_ORDER_ADDRESS || 
+          address == JUPITER_DCA_ADDRESS) {
+        
+        // Update protocol stats
+        protocol.totalUniqueUsers = protocol.totalUniqueUsers.plus(BigInt.fromI32(1))
+        protocol.lastUpdateTimestamp = BigInt.fromI32(i)
+        protocol.save()
+
+        // TODO: Process market, token, and swap data once we have access to the full transaction data
+      }
+    }
   }
 }

@@ -1,85 +1,43 @@
 type Protocol @entity {
-  " Protocol ID (Jupiter) "
   id: ID!
-  
-  " Protocol name "
   name: String!
-  
-  " Protocol version "
   version: String!
-  
-  " Total volume in USD "
   totalVolumeUSD: BigDecimal!
-  
-  " Total number of unique users "
   totalUniqueUsers: BigInt!
-  
-  " Timestamp of last update "
   lastUpdateTimestamp: BigInt!
 }
 
 type Market @entity {
-  " Market address "
   id: ID!
-  
-  " Token pair name (e.g. SOL-USDC) "
+  protocol: Protocol!
   name: String!
-  
-  " Input token address "
-  inputToken: Token!
-  
-  " Output token address "
-  outputToken: Token!
-  
-  " Total volume in USD "
-  volumeUSD: BigDecimal!
-  
-  " Number of swaps "
+  baseToken: Token!
+  quoteToken: Token!
+  tvl: BigDecimal!
+  volume24h: BigDecimal!
   swapCount: BigInt!
-  
-  " Creation timestamp "
-  createdTimestamp: BigInt!
 }
 
 type Token @entity {
-  " Token address (mint) "
   id: ID!
-  
-  " Token symbol "
-  symbol: String!
-  
-  " Token name "
   name: String!
-  
-  " Token decimals "
+  symbol: String!
   decimals: Int!
-  
-  " Total volume in USD "
-  volumeUSD: BigDecimal!
+  totalSupply: BigInt!
+  markets: [Market!]! @derivedFrom(field: "baseToken")
+  quoteMarkets: [Market!]! @derivedFrom(field: "quoteToken")
 }
 
 type Swap @entity {
-  " Transaction hash - log index "
   id: ID!
-  
-  " Market where swap occurred "
   market: Market!
-  
-  " Input token amount "
-  amountIn: BigInt!
-  
-  " Output token amount "
-  amountOut: BigInt!
-  
-  " USD value of swap "
-  amountUSD: BigDecimal!
-  
-  " User address "
-  user: String!
-  
-  " Block number "
-  blockNumber: BigInt!
-  
-  " Block timestamp "
   timestamp: BigInt!
+  amountIn: BigInt!
+  amountOut: BigInt!
+  amountInUSD: BigDecimal!
+  amountOutUSD: BigDecimal!
+  tokenIn: Token!
+  tokenOut: Token!
+  trader: String!
+  transactionHash: String!
 }
