@@ -12,4 +12,7 @@ modules:
     use: solana:solana:transactions_by_programid_without_votes
 network: solana-mainnet-beta
 params:
-  map_spl_transfers: token_contract:orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE
+  map_spl_transfers: >-
+    token_contract:JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4,
+    token_contract:jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu,
+    token_contract:DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M
