@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, Bytes } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal, Bytes, TypedMap, Value } from "@graphprotocol/graph-ts"
 import { Protocol, Market, Token, Swap } from "../generated/schema"
 import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
 
@@ -14,7 +14,7 @@ function isJupiterContract(address: string): boolean {
          address == JUPITER_DCA_ADDRESS;
 }
 
-// Helper function to safely convert Uint8Array to string
+// Helper function to safely convert bytes to base58 string
 function bytesToBase58(bytes: Uint8Array | null): string {
   if (!bytes) return "";
   return Bytes.fromUint8Array(bytes).toBase58();
@@ -49,17 +49,16 @@ export function handleTriggers(data: Transactions): void {
     const message = txData.message;
     if (!message) continue;
 
-    // Handle account keys as Uint8Array array
+    // Create a TypedMap for storing account keys
     const accountKeys = message.accountKeys;
     if (!accountKeys) continue;
 
     let foundJupiterContract = false;
     
-    // Process each account key as Uint8Array
+    // Process each account key
     for (let j = 0; j < accountKeys.length; j++) {
       const keyBytes = accountKeys[j];
-      if (!keyBytes) continue;
-
+      
       // Convert bytes to Base58 string (Solana address format)
       const address = bytesToBase58(keyBytes);
       if (address == "") continue;
