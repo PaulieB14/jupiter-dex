@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, TypedMap, Value, JSONValue } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal, TypedMap, Value, JSONValue, Bytes } from "@graphprotocol/graph-ts"
 import { Protocol, Market, Token, Swap } from "../generated/schema"
 import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
 
@@ -6,6 +6,19 @@ import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
 const JUPITER_SWAP_ADDRESS = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
 const JUPITER_LIMIT_ORDER_ADDRESS = "jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu"
 const JUPITER_DCA_ADDRESS = "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M"
+
+// Helper function to safely get string from potentially null bytes
+function safeToString(value: Bytes | null): string {
+  if (!value) return "";
+  return value.toHexString();
+}
+
+// Helper function to check if address is a Jupiter contract
+function isJupiterContract(address: string): boolean {
+  return address == JUPITER_SWAP_ADDRESS || 
+         address == JUPITER_LIMIT_ORDER_ADDRESS || 
+         address == JUPITER_DCA_ADDRESS;
+}
 
 export function handleTriggers(data: Transactions): void {
   if (!data) return;
@@ -42,24 +55,16 @@ export function handleTriggers(data: Transactions): void {
 
     let foundJupiterContract = false;
     
-    // Process each key, treating them as potentially null
+    // Process each key, treating them as potentially null bytes
     for (let j = 0; j < keys.length; j++) {
-      const key = keys[j];
+      const key = keys[j] as Bytes | null;
       
-      // Skip null/undefined keys
-      if (!key) continue;
+      // Convert key to string safely using helper function
+      const address = safeToString(key);
+      if (address == "") continue;
 
-      // Safely convert key to string
-      let keyStr = "";
-      if (key.toString) {
-        keyStr = key.toString();
-      }
-      if (keyStr == "") continue;
-
-      // Check against Jupiter contracts
-      if (keyStr == JUPITER_SWAP_ADDRESS || 
-          keyStr == JUPITER_LIMIT_ORDER_ADDRESS || 
-          keyStr == JUPITER_DCA_ADDRESS) {
+      // Check if this is a Jupiter contract using helper function
+      if (isJupiterContract(address)) {
         foundJupiterContract = true;
         break;
       }
