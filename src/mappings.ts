@@ -1,11 +1,11 @@
-import { BigInt, BigDecimal, Bytes, TypedMap, Value } from "@graphprotocol/graph-ts"
-import { Protocol, Market, Token, Swap } from "../generated/schema"
+import { BigInt, BigDecimal, Bytes } from "@graphprotocol/graph-ts"
+import { Protocol } from "../generated/schema"
 import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
 
-// Jupiter contract addresses
-const JUPITER_SWAP_ADDRESS = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
-const JUPITER_LIMIT_ORDER_ADDRESS = "jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu"
-const JUPITER_DCA_ADDRESS = "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M"
+// Jupiter contract addresses as base58 strings
+const JUPITER_SWAP_ADDRESS = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
+const JUPITER_LIMIT_ORDER_ADDRESS = "jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu";
+const JUPITER_DCA_ADDRESS = "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M";
 
 // Helper function to check if address is a Jupiter contract
 function isJupiterContract(address: string): boolean {
@@ -15,67 +15,88 @@ function isJupiterContract(address: string): boolean {
 }
 
 // Helper function to safely convert bytes to base58 string
-function bytesToBase58(bytes: Uint8Array | null): string {
-  if (!bytes) return "";
+function bytesToBase58(bytes: Uint8Array): string {
+  if (bytes.length == 0) return "";
   return Bytes.fromUint8Array(bytes).toBase58();
 }
 
-export function handleTriggers(data: Transactions): void {
-  if (!data) return;
-
-  // Initialize Protocol if it doesn't exist
-  let protocol = Protocol.load("jupiter")
+// Helper function to get or create protocol
+function getOrCreateProtocol(): Protocol {
+  let protocol = Protocol.load("jupiter");
   if (!protocol) {
-    protocol = new Protocol("jupiter")
-    protocol.name = "Jupiter"
-    protocol.version = "v6"
-    protocol.totalVolumeUSD = BigDecimal.fromString("0")
-    protocol.totalUniqueUsers = BigInt.fromI32(0)
-    protocol.lastUpdateTimestamp = BigInt.fromI32(0)
-    protocol.save()
+    protocol = new Protocol("jupiter");
+    protocol.name = "Jupiter";
+    protocol.version = "v6";
+    protocol.totalVolumeUSD = BigDecimal.fromString("0");
+    protocol.totalUniqueUsers = BigInt.fromI32(0);
+    protocol.lastUpdateTimestamp = BigInt.fromI32(0);
+    protocol.save();
   }
+  return protocol;
+}
 
-  // Safely handle transactions array
-  const transactions = data.transactions;
-  if (!transactions) return;
-
-  for (let i = 0; i < transactions.length; i++) {
-    const tx = transactions[i];
-    if (!tx || !tx.meta) continue;
-
-    const txData = tx.transaction;
-    if (!txData || !txData.message) continue;
-
-    const message = txData.message;
-    if (!message) continue;
-
-    // Create a TypedMap for storing account keys
-    const accountKeys = message.accountKeys;
-    if (!accountKeys) continue;
-
-    let foundJupiterContract = false;
-    
-    // Process each account key
-    for (let j = 0; j < accountKeys.length; j++) {
-      const keyBytes = accountKeys[j];
-      
-      // Convert bytes to Base58 string (Solana address format)
-      const address = bytesToBase58(keyBytes);
-      if (address == "") continue;
-
-      // Check if this is a Jupiter contract
+// Helper function to safely process account keys
+function processAccountKeys(accountKeys: Array<Uint8Array>): boolean {
+  let i = 0;
+  while (i < accountKeys.length) {
+    const bytes = accountKeys[i];
+    if (bytes && bytes.length > 0) {
+      const address = bytesToBase58(bytes);
       if (isJupiterContract(address)) {
-        foundJupiterContract = true;
-        break;
+        return true;
       }
     }
+    i++;
+  }
+  return false;
+}
 
-    // Only update protocol stats if we found a Jupiter contract
-    if (foundJupiterContract) {
-      const currentUsers = protocol.totalUniqueUsers;
-      protocol.totalUniqueUsers = currentUsers.plus(BigInt.fromI32(1));
-      protocol.lastUpdateTimestamp = BigInt.fromI32(i);
-      protocol.save();
+export function handleTriggers(data: Transactions): void {
+  if (!data || !data.transactions) return;
+
+  const protocol = getOrCreateProtocol();
+  let hasUpdates = false;
+
+  let i = 0;
+  while (i < data.transactions.length) {
+    const tx = data.transactions[i];
+    if (!tx || !tx.meta) {
+      i++;
+      continue;
     }
+
+    const txData = tx.transaction;
+    if (!txData) {
+      i++;
+      continue;
+    }
+
+    const message = txData.message;
+    if (!message) {
+      i++;
+      continue;
+    }
+
+    const accountKeys = message.accountKeys;
+    if (!accountKeys) {
+      i++;
+      continue;
+    }
+
+    // Process account keys safely
+    if (processAccountKeys(accountKeys)) {
+      hasUpdates = true;
+      break;
+    }
+
+    i++;
+  }
+
+  // Update protocol stats if we found a Jupiter contract
+  if (hasUpdates) {
+    const currentUsers = protocol.totalUniqueUsers;
+    protocol.totalUniqueUsers = currentUsers.plus(BigInt.fromI32(1));
+    protocol.lastUpdateTimestamp = BigInt.fromI32(i);
+    protocol.save();
   }
 }

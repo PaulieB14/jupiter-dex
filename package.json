@@ -7,8 +7,13 @@
     "build": "graph build"
   },
   "dependencies": {
-    "as-proto": "^1.3.0",
+    "@bufbuild/buf": "^1.50.0",
+    "@connectrpc/connect": "^2.0.1",
+    "@connectrpc/connect-node": "^2.0.1",
     "@graphprotocol/graph-cli": "^0.68.0",
-    "@graphprotocol/graph-ts": "^0.32.0"
+    "@graphprotocol/graph-ts": "^0.32.0",
+    "@substreams/core": "^0.17.0",
+    "@substreams/manifest": "^0.16.0",
+    "as-proto": "^1.3.0"
   }
 }
