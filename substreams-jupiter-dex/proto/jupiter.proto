@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package sf.substreams.v1;
+
+message JupiterTransactions {
+    repeated JupiterTransaction transactions = 1;
+}
+
+message JupiterTransaction {
+    uint64 slot = 1;
+    uint64 timestamp = 2;
+    bytes signature = 3;
+    bytes program_id = 4;
+    repeated bytes account_keys = 5;
+}

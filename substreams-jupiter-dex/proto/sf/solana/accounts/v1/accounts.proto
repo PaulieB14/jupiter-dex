@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package sf.solana.accounts.v1;
+
+message AccountChange {
+    bytes pubkey = 1;
+    bytes owner = 2;
+    uint64 lamports = 3;
+    uint64 slot = 4;
+    bool executable = 5;
+    uint64 rent_epoch = 6;
+    bytes data = 7;
+    bool deleted = 8;
+}
+
+message AccountChanges {
+    repeated AccountChange changes = 1;
+}

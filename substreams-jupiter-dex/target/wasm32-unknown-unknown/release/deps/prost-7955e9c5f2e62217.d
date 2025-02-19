@@ -1,0 +1,11 @@
+/workspaces/substreams-starter/substreams-jupiter-dex/target/wasm32-unknown-unknown/release/deps/libprost-7955e9c5f2e62217.rmeta: /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/lib.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/error.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/message.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/types.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/encoding.rs
+
+/workspaces/substreams-starter/substreams-jupiter-dex/target/wasm32-unknown-unknown/release/deps/libprost-7955e9c5f2e62217.rlib: /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/lib.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/error.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/message.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/types.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/encoding.rs
+
+/workspaces/substreams-starter/substreams-jupiter-dex/target/wasm32-unknown-unknown/release/deps/prost-7955e9c5f2e62217.d: /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/lib.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/error.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/message.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/types.rs /home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/encoding.rs
+
+/home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/lib.rs:
+/home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/error.rs:
+/home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/message.rs:
+/home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/types.rs:
+/home/codespace/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prost-0.10.4/src/encoding.rs:

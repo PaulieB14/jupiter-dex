@@ -1,19 +1,16 @@
-specVersion: 1.0.0
-description: Solana SPL Token Substreams-powered-Subgraph
-indexerHints:
-  prune: auto
+specVersion: 0.0.5
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: substreams
-    name: my_project_sol
-    network: solana-mainnet-beta
+    name: jupiter_dex
+    network: mainnet
     source:
       package:
         moduleName: map_filtered_transactions
-        file: ./jupiter-dex/build/jupiter-dex/jupiter-dex-v0.1.0.spkg
+        file: ./substreams-jupiter-dex/target/wasm32-unknown-unknown/release/substreams.wasm
     mapping:
-      apiVersion: 0.0.7
       kind: substreams/graph-entities
+      apiVersion: 0.0.7
       file: ./src/mappings.ts
       handler: handleTriggers

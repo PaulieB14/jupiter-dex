@@ -1,43 +1,10 @@
-type Protocol @entity {
+type Account @entity {
   id: ID!
-  name: String!
-  version: String!
-  totalVolumeUSD: BigDecimal!
-  totalUniqueUsers: BigInt!
-  lastUpdateTimestamp: BigInt!
-}
-
-type Market @entity {
-  id: ID!
-  protocol: Protocol!
-  name: String!
-  baseToken: Token!
-  quoteToken: Token!
-  tvl: BigDecimal!
-  volume24h: BigDecimal!
-  swapCount: BigInt!
-}
-
-type Token @entity {
-  id: ID!
-  name: String!
-  symbol: String!
-  decimals: Int!
-  totalSupply: BigInt!
-  markets: [Market!]! @derivedFrom(field: "baseToken")
-  quoteMarkets: [Market!]! @derivedFrom(field: "quoteToken")
-}
-
-type Swap @entity {
-  id: ID!
-  market: Market!
-  timestamp: BigInt!
-  amountIn: BigInt!
-  amountOut: BigInt!
-  amountInUSD: BigDecimal!
-  amountOutUSD: BigDecimal!
-  tokenIn: Token!
-  tokenOut: Token!
-  trader: String!
-  transactionHash: String!
+  pubkey: String!
+  owner: String!
+  lamports: BigInt!
+  slot: BigInt!
+  executable: Boolean!
+  rentEpoch: BigInt!
+  data: Bytes!
 }

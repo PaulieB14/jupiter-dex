@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package sf.substreams.v1;
+
+option go_package = "github.com/streamingfast/substreams/pb/sf/substreams/v1;pbsubstreams";
+
+message EntityChanges {
+    repeated EntityChange changes = 1;
+}
+
+message EntityChange {
+    string entity_type = 1;
+    string id = 2;
+    repeated Field fields = 3;
+    Operation operation = 4;
+}
+
+message Field {
+    string name = 1;
+    Value value = 2;
+}
+
+message Value {
+    oneof typed_value {
+        string string_value = 1;
+        int64 int64_value = 2;
+        double float64_value = 3;
+        bool bool_value = 4;
+        bytes bytes_value = 5;
+        Array array_value = 6;
+    }
+}
+
+message Array {
+    repeated Value values = 1;
+}
+
+enum Operation {
+    UNSPECIFIED = 0;
+    CREATE = 1;
+    UPDATE = 2;
+    DELETE = 3;
+}

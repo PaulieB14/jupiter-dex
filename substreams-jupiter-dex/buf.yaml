@@ -1,0 +1,4 @@
+version: v1
+name: buf.build/streamingfast/substreams-solana
+deps:
+  - buf.build/streamingfast/substreams

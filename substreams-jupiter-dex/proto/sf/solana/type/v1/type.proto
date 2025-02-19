@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package sf.solana.type.v1;
+
+message ConfirmedTransaction {
+    Transaction transaction = 1;
+    bytes slot = 2;
+    bytes block_time = 3;
+    bytes meta = 4;
+}
+
+message Transaction {
+    bytes signatures = 1;
+    Message message = 2;
+}
+
+message Message {
+    repeated bytes account_keys = 1;
+    bytes recent_blockhash = 2;
+    repeated CompiledInstruction instructions = 3;
+}
+
+message CompiledInstruction {
+    uint32 program_id_index = 1;
+    repeated uint32 accounts = 2;
+    bytes data = 3;
+}

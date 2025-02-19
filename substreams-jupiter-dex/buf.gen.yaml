@@ -1,0 +1,7 @@
+version: v1
+plugins:
+  - plugin: as
+    out: src/pb
+    opt:
+      - target=graph
+      - module=sf/substreams/v1

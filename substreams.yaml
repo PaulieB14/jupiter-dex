@@ -1,32 +1,30 @@
 specVersion: v0.1.0
 package:
-  name: my_project_sol
+  name: jupiter_dex
   version: v0.1.0
+
+imports:
+  solana: https://github.com/streamingfast/substreams-solana-accounts-foundational/releases/download/v0.1.0/solana-accounts-foundational-v0.1.0.spkg
+
+protobuf:
+  files:
+    - sf/substreams/v1/entities.proto
+  importPaths:
+    - ./proto
 
 binaries:
   default:
     type: wasm/rust-v1
     file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 
-imports:
-  solana: https://github.com/streamingfast/substreams-solana-spl-token/raw/master/tokens/solana-spl-token-v0.1.0.spkg
 modules:
-  - name: map_spl_transfers
+  - name: map_filtered_accounts
     kind: map
     inputs:
-      - source: sf.solana.type.v1.Block
+      - source: solana:filtered_accounts
+        params:
+          filtered_accounts: "owner:JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 || owner:jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu || owner:DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M"
     output:
-      type: proto:sf.solana.type.v1.Block
-    initialBlock: 260000082
-  - name: map_transactions_by_programid
-    kind: map
-    inputs:
-      - source: sf.solana.type.v1.Block
-    output:
-      type: proto:sf.solana.type.v1.Block
+      type: proto:sf.substreams.v1.EntityChanges
+
 network: solana-mainnet-beta
-params:
-  map_spl_transfers: >-
-    token_contract:JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4,
-    token_contract:jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu,
-    token_contract:DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M

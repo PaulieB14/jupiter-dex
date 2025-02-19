@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package sf.solana.type.v1;
+
+message Block {
+  repeated Transaction transactions = 1;
+}
+
+message Transaction {
+  optional TransactionMessage transaction = 1;
+  optional TransactionMessage message = 2;
+}
+
+message TransactionMessage {
+  repeated bytes account_keys = 1;
+}

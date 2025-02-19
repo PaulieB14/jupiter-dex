@@ -1,19 +1,17 @@
 {
-  "name": "my_project_sol",
+  "name": "jupiter-dex",
   "version": "0.1.0",
   "scripts": {
-    "protogen": "buf generate --type=\"sf.solana.spl.token.v1.Events\" ./solana-spl-token-v0.1.0.spkg#format=bin",
     "codegen": "graph codegen",
-    "build": "graph build"
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ jupiter-dex",
+    "create-local": "graph create --node http://localhost:8020/ jupiter-dex",
+    "remove-local": "graph remove --node http://localhost:8020/ jupiter-dex",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 jupiter-dex",
+    "protogen": "substreams protogen ./substreams.yaml --exclude-paths=\"sf/ethereum,sf/substreams,google\""
   },
   "dependencies": {
-    "@bufbuild/buf": "^1.50.0",
-    "@connectrpc/connect": "^2.0.1",
-    "@connectrpc/connect-node": "^2.0.1",
-    "@graphprotocol/graph-cli": "^0.68.0",
-    "@graphprotocol/graph-ts": "^0.32.0",
-    "@substreams/core": "^0.17.0",
-    "@substreams/manifest": "^0.16.0",
-    "as-proto": "^1.3.0"
+    "@graphprotocol/graph-cli": "0.51.0",
+    "@graphprotocol/graph-ts": "0.31.0"
   }
 }

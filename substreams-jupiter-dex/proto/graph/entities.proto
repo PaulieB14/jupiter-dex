@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package sf.substreams.v1;
+
+message Transactions {
+    repeated Transaction transactions = 1;
+}
+
+message Transaction {
+    string id = 1;
+    uint64 slot = 2;
+    uint64 timestamp = 3;
+    string signature = 4;
+    string program_id = 5;
+    repeated string account_keys = 6;
+}

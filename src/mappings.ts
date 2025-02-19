@@ -1,88 +1,70 @@
-import { BigInt, BigDecimal, Bytes } from "@graphprotocol/graph-ts"
-import { Protocol } from "../generated/schema"
-import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
+import { BigInt, Bytes, Entity, store, TypedMap, JSONValue } from "@graphprotocol/graph-ts";
 
-// Jupiter contract addresses
-const JUPITER_SWAP_ADDRESS = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
-const JUPITER_LIMIT_ORDER_ADDRESS = "jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu";
-const JUPITER_DCA_ADDRESS = "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M";
+export function handleTriggers(data: TypedMap<string, JSONValue>): void {
+  const changes = data.get("changes");
+  if (!changes) return;
 
-// Helper function to check if address is a Jupiter contract
-function isJupiterContract(address: string): boolean {
-  return address == JUPITER_SWAP_ADDRESS || 
-         address == JUPITER_LIMIT_ORDER_ADDRESS || 
-         address == JUPITER_DCA_ADDRESS;
-}
+  const changesArray = changes.toArray();
+  for (let i = 0; i < changesArray.length; i++) {
+    const change = changesArray[i].toObject();
+    const entityType = change.get("entity_type");
+    if (!entityType || entityType.toString() !== "Account") continue;
 
-// Helper function to safely get or create protocol
-function getOrCreateProtocol(): Protocol {
-  let protocol = Protocol.load("jupiter");
-  if (!protocol) {
-    protocol = new Protocol("jupiter");
-    protocol.name = "Jupiter";
-    protocol.version = "v6";
-    protocol.totalVolumeUSD = BigDecimal.fromString("0");
-    protocol.totalUniqueUsers = BigInt.fromI32(0);
-    protocol.lastUpdateTimestamp = BigInt.fromI32(0);
-    protocol.save();
-  }
-  return protocol;
-}
+    const id = change.get("id");
+    const operation = change.get("operation");
+    if (!id || !operation) continue;
 
-// Helper function to safely process account keys
-function processAccountKeys(accountKeys: Array<Uint8Array>): boolean {
-  for (let i = 0; i < accountKeys.length; i++) {
-    const key = accountKeys[i];
-    if (!key) continue;
-
-    // Convert bytes to string safely
-    const keyBytes = Bytes.fromUint8Array(key);
-    if (!keyBytes) continue;
-
-    const address = keyBytes.toBase58();
-    if (!address || address == "") continue;
-
-    if (isJupiterContract(address)) {
-      return true;
+    if (operation.toBigInt().toI32() === 3) { // DELETE
+      store.remove("Account", id.toString());
+      continue;
     }
-  }
-  return false;
-}
 
-// Helper function to safely process a transaction
-function processTransaction(tx: Transactions): boolean {
-  if (!tx || !tx.transactions) return false;
+    const fields = change.get("fields");
+    if (!fields) continue;
 
-  for (let i = 0; i < tx.transactions.length; i++) {
-    const transaction = tx.transactions[i];
-    if (!transaction || !transaction.meta) continue;
+    const entity = new Entity();
+    const fieldsArray = fields.toArray();
+    
+    for (let j = 0; j < fieldsArray.length; j++) {
+      const field = fieldsArray[j].toObject();
+      const name = field.get("name");
+      const value = field.get("value");
+      if (!name || !value) continue;
 
-    const txData = transaction.transaction;
-    if (!txData) continue;
+      const typedValue = value.toObject().get("typed_value");
+      if (!typedValue) continue;
 
-    const message = txData.message;
-    if (!message) continue;
-
-    const accountKeys = message.accountKeys;
-    if (!accountKeys) continue;
-
-    if (processAccountKeys(accountKeys)) {
-      return true;
+      switch (name.toString()) {
+        case "slot":
+        case "lamports":
+        case "rentEpoch":
+          const int64Value = typedValue.toObject().get("int64_value");
+          if (int64Value) {
+            entity.setBigInt(name.toString(), int64Value.toBigInt());
+          }
+          break;
+        case "pubkey":
+        case "owner":
+          const stringValue = typedValue.toObject().get("string_value");
+          if (stringValue) {
+            entity.setString(name.toString(), stringValue.toString());
+          }
+          break;
+        case "executable":
+          const boolValue = typedValue.toObject().get("bool_value");
+          if (boolValue) {
+            entity.setBoolean(name.toString(), boolValue.toBool());
+          }
+          break;
+        case "data":
+          const bytesValue = typedValue.toObject().get("bytes_value");
+          if (bytesValue && bytesValue.toString() !== "") {
+            entity.setBytes(name.toString(), Bytes.fromByteArray(Bytes.fromHexString(bytesValue.toString())));
+          }
+          break;
+      }
     }
-  }
-  return false;
-}
-
-export function handleTriggers(data: Transactions): void {
-  // Get or create protocol first
-  const protocol = getOrCreateProtocol();
-
-  // Process transaction safely
-  if (processTransaction(data)) {
-    // Update protocol stats only if we found a Jupiter transaction
-    const currentUsers = protocol.totalUniqueUsers;
-    protocol.totalUniqueUsers = currentUsers.plus(BigInt.fromI32(1));
-    protocol.lastUpdateTimestamp = BigInt.fromI32(0); // Use 0 as timestamp for now
-    protocol.save();
+    
+    store.set("Account", id.toString(), entity);
   }
 }

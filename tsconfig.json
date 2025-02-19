@@ -1,6 +1,16 @@
 {
-    "extends": "@graphprotocol/graph-ts/types/tsconfig.base.json",
-    "include": [
-      "src"
-    ]
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "lib": ["es2020"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

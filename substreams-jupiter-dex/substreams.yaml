@@ -1,0 +1,27 @@
+specVersion: v0.1.0
+package:
+  name: jupiter_dex
+  version: v0.1.0
+
+imports:
+  solana: ../solana-spl-token-v0.1.0.spkg
+
+protobuf:
+  files:
+    - proto/sf/substreams/v1/entities.proto
+  importPaths:
+    - proto
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ./target/wasm32-unknown-unknown/release/substreams.wasm
+
+modules:
+  - name: map_filtered_transactions
+    kind: map
+    inputs:
+      - source: sf.solana.type.v1.Block
+    output:
+      type: proto:sf.substreams.v1.EntityChanges
+    initialBlock: 260000082

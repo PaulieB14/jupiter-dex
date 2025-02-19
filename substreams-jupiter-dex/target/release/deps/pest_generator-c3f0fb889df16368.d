@@ -1,0 +1,11 @@
+/workspaces/substreams-starter/substreams-jupiter-dex/target/release/deps/pest_generator-c3f0fb889df16368.rmeta: /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/lib.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/macros.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/docs.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/generator.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/parse_derive.rs
+
+/workspaces/substreams-starter/substreams-jupiter-dex/target/release/deps/libpest_generator-c3f0fb889df16368.rlib: /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/lib.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/macros.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/docs.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/generator.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/parse_derive.rs
+
+/workspaces/substreams-starter/substreams-jupiter-dex/target/release/deps/pest_generator-c3f0fb889df16368.d: /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/lib.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/macros.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/docs.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/generator.rs /home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/parse_derive.rs
+
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/lib.rs:
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/macros.rs:
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/docs.rs:
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/generator.rs:
+/home/codespace/.cargo/registry/src/github.com-1ecc6299db9ec823/pest_generator-2.7.15/src/parse_derive.rs:
