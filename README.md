@@ -1,119 +1,28 @@
-# Jupiter DEX Subgraph
+<a href="https://www.streamingfast.io/">
+	<img width="100%" src="https://github.com/streamingfast/substreams/blob/develop/docs/assets/substreams-banner.png" alt="StreamingFast Substreams Banner" />
+</a>
 
-This subgraph indexes Jupiter DEX data from Solana, tracking protocol metrics, markets, tokens, and swaps. It uses Substreams technology for efficient data processing and The Graph for indexing.
+# Substreams
 
-## Overview
+> Developer preview
 
-The subgraph tracks the following Jupiter contracts:
-- Jupiter Swap: `JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4`
-- Jupiter Limit Order: `jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu`
-- Jupiter DCA: `DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M`
+Substreams is a powerful blockchain indexing technology, developed for The Graph Network.
 
-## Schema
+Substreams enables developers to write Rust modules, composing data streams alongside the community, and provides extremely high performance indexing by virtue of parallelization, in a streaming-first fashion.
 
-### Protocol
-Tracks global protocol metrics:
-- Total volume in USD
-- Total unique users
-- Last update timestamp
+Substreams has all the benefits of StreamingFast Firehose, like low-cost caching and archiving of blockchain data, high throughput processing, and cursor-based reorgs handling.
 
-### Market
-Tracks individual trading pairs:
-- Base and quote tokens
-- TVL
-- 24h volume
-- Swap count
+## Documentation
 
-### Token
-Stores token information:
-- Name and symbol
-- Decimals
-- Total supply
-- Associated markets (derived)
-
-### Swap
-Records individual swap transactions:
-- Market reference
-- Amounts (in/out)
-- USD values
-- Trader address
-- Transaction hash
-
-## Technical Stack
-
-### Dependencies
-- `@graphprotocol/graph-cli`: The Graph CLI for building and deploying subgraphs
-- `@graphprotocol/graph-ts`: TypeScript types for subgraph development
-- `as-proto`: AssemblyScript Protobuf implementation for Substreams
-
-### Substreams Package
-We utilize the [Solana DEX Trades Substreams package](https://substreams.dev/packages/tl-solana-dex-trades-1-0-13/v1.0.13) which provides:
-- Block data processing
-- Transaction filtering
-- SPL token event handling
-
-## Development
-
-### Prerequisites
-1. Node.js and npm
-2. The Graph CLI: `npm install -g @graphprotocol/graph-cli`
-3. A Graph Studio account and deployment key
-
-### Setup
-1. Install dependencies:
-```bash
-npm install
-```
-
-2. Generate AssemblyScript types:
-```bash
-npm run codegen
-```
-
-3. Build the subgraph:
-```bash
-npm run build
-```
-
-### Deployment
-1. Authenticate with Graph Studio:
-```bash
-graph auth <your-deploy-key>
-```
-
-2. Deploy the subgraph:
-```bash
-graph deploy --node https://api.studio.thegraph.com/deploy/ --version-label v1.0.0 jupiter-dex
-```
-
-## Querying
-
-The subgraph is deployed at: https://api.studio.thegraph.com/query/92142/jupiter-dex/v1.0.3
-
-Example query:
-```graphql
-{
-  protocol(id: "jupiter") {
-    totalVolumeUSD
-    totalUniqueUsers
-  }
-  markets(first: 5) {
-    id
-    tvl
-    volume24h
-    swapCount
-  }
-}
-```
+Full documentation for installing, running and working with Substreams is available at: https://substreams.streamingfast.io.
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
+**Please first refer to the general
+[StreamingFast contribution guide](https://github.com/streamingfast/streamingfast/blob/master/CONTRIBUTING.md)**,
+if you wish to contribute to this code base.
+
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+[Apache 2.0](LICENSE)

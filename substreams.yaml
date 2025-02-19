@@ -2,14 +2,28 @@ specVersion: v0.1.0
 package:
   name: my_project_sol
   version: v0.1.0
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ./target/wasm32-unknown-unknown/release/substreams.wasm
+
 imports:
   solana: https://github.com/streamingfast/substreams-solana-spl-token/raw/master/tokens/solana-spl-token-v0.1.0.spkg
 modules:
   - name: map_spl_transfers
-    use: solana:map_block
+    kind: map
+    inputs:
+      - source: sf.solana.type.v1.Block
+    output:
+      type: proto:sf.solana.type.v1.Block
     initialBlock: 260000082
   - name: map_transactions_by_programid
-    use: solana:solana:transactions_by_programid_without_votes
+    kind: map
+    inputs:
+      - source: sf.solana.type.v1.Block
+    output:
+      type: proto:sf.solana.type.v1.Block
 network: solana-mainnet-beta
 params:
   map_spl_transfers: >-
