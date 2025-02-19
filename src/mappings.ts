@@ -22,35 +22,37 @@ export function handleTriggers(data: Transactions): void {
     protocol.save()
   }
 
-  // Process transactions safely
-  const txs = data.transactions;
-  for (let i = 0; i < txs.length; i++) {
-    const tx = txs[i];
-    if (!tx) continue;
+  // Process transactions with improved safety and efficiency
+  const transactions = data.transactions;
+  if (!transactions || transactions.length === 0) return;
+
+  for (let i = 0; i < transactions.length; i++) {
+    const tx = transactions[i];
+    if (!tx || !tx.meta) continue;
 
     const txData = tx.transaction;
-    if (!txData) continue;
+    if (!txData || !txData.message) continue;
 
-    const txMeta = tx.meta;
-    if (!txMeta) continue;
+    const message = txData.message;
+    if (!message) continue;
 
-    const msg = txData.message;
-    if (!msg) continue;
-
-    const keys = msg.accountKeys;
-    if (!keys) continue;
+    // Safely access accountKeys after message validation
+    const accountKeys = message.accountKeys;
+    if (!accountKeys || accountKeys.length === 0) continue;
 
     // Check if transaction involves Jupiter contracts
-    for (let j = 0; j < keys.length; j++) {
-      const key = keys[j];
-      if (!key) continue;
+    for (let j = 0; j < accountKeys.length; j++) {
+      const account = accountKeys[j];
+      if (!account) continue;
 
-      // Safely convert key to string
-      const addr = key.toString();
-      if (!addr || addr == "") continue;
-      if (addr == JUPITER_SWAP_ADDRESS || 
-          addr == JUPITER_LIMIT_ORDER_ADDRESS || 
-          addr == JUPITER_DCA_ADDRESS) {
+      // Get account address, using direct toString() since we already validated account
+      const address = account.toString();
+      if (address == "") continue;
+
+      // Check if this is a Jupiter contract
+      if (address == JUPITER_SWAP_ADDRESS || 
+          address == JUPITER_LIMIT_ORDER_ADDRESS || 
+          address == JUPITER_DCA_ADDRESS) {
         
         // Update protocol stats
         protocol.totalUniqueUsers = protocol.totalUniqueUsers.plus(BigInt.fromI32(1))
