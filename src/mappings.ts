@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, TypedMap } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal, TypedMap, Value, JSONValue } from "@graphprotocol/graph-ts"
 import { Protocol, Market, Token, Swap } from "../generated/schema"
 import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
 
@@ -36,33 +36,41 @@ export function handleTriggers(data: Transactions): void {
     const message = txData.message;
     if (!message) continue;
 
-    // Create a TypedMap for account keys to ensure proper handling
-    const accountKeys = message.accountKeys;
-    if (!accountKeys) continue;
+    // Handle account keys as nullable array
+    const keys = message.accountKeys;
+    if (!keys) continue;
 
-    // Process each account key
-    for (let j = 0; j < accountKeys.length; j++) {
-      const account = accountKeys[j];
-      if (!account) continue;
+    let foundJupiterContract = false;
+    
+    // Process each key, treating them as potentially null
+    for (let j = 0; j < keys.length; j++) {
+      const key = keys[j];
+      
+      // Skip null/undefined keys
+      if (!key) continue;
 
-      // Convert account to string and validate
-      const address = account.toString();
-      if (address == "") continue;
+      // Safely convert key to string
+      let keyStr = "";
+      if (key.toString) {
+        keyStr = key.toString();
+      }
+      if (keyStr == "") continue;
 
-      // Check if this is a Jupiter contract
-      if (address == JUPITER_SWAP_ADDRESS || 
-          address == JUPITER_LIMIT_ORDER_ADDRESS || 
-          address == JUPITER_DCA_ADDRESS) {
-        
-        // Update protocol stats using safe integer operations
-        const currentUsers = protocol.totalUniqueUsers;
-        protocol.totalUniqueUsers = currentUsers.plus(BigInt.fromI32(1));
-        protocol.lastUpdateTimestamp = BigInt.fromI32(i);
-        protocol.save();
-        
-        // Exit early after finding a match to prevent duplicate processing
+      // Check against Jupiter contracts
+      if (keyStr == JUPITER_SWAP_ADDRESS || 
+          keyStr == JUPITER_LIMIT_ORDER_ADDRESS || 
+          keyStr == JUPITER_DCA_ADDRESS) {
+        foundJupiterContract = true;
         break;
       }
+    }
+
+    // Only update protocol stats if we found a Jupiter contract
+    if (foundJupiterContract) {
+      const currentUsers = protocol.totalUniqueUsers;
+      protocol.totalUniqueUsers = currentUsers.plus(BigInt.fromI32(1));
+      protocol.lastUpdateTimestamp = BigInt.fromI32(i);
+      protocol.save();
     }
   }
 }
