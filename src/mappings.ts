@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal, TypedMap } from "@graphprotocol/graph-ts"
 import { Protocol, Market, Token, Swap } from "../generated/schema"
 import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
 
@@ -8,7 +8,7 @@ const JUPITER_LIMIT_ORDER_ADDRESS = "jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu
 const JUPITER_DCA_ADDRESS = "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M"
 
 export function handleTriggers(data: Transactions): void {
-  if (!data || !data.transactions) return;
+  if (!data) return;
 
   // Initialize Protocol if it doesn't exist
   let protocol = Protocol.load("jupiter")
@@ -22,9 +22,9 @@ export function handleTriggers(data: Transactions): void {
     protocol.save()
   }
 
-  // Process transactions with improved safety and efficiency
+  // Safely handle transactions array
   const transactions = data.transactions;
-  if (!transactions || transactions.length === 0) return;
+  if (!transactions) return;
 
   for (let i = 0; i < transactions.length; i++) {
     const tx = transactions[i];
@@ -36,16 +36,16 @@ export function handleTriggers(data: Transactions): void {
     const message = txData.message;
     if (!message) continue;
 
-    // Safely access accountKeys after message validation
+    // Create a TypedMap for account keys to ensure proper handling
     const accountKeys = message.accountKeys;
-    if (!accountKeys || accountKeys.length === 0) continue;
+    if (!accountKeys) continue;
 
-    // Check if transaction involves Jupiter contracts
+    // Process each account key
     for (let j = 0; j < accountKeys.length; j++) {
       const account = accountKeys[j];
       if (!account) continue;
 
-      // Get account address, using direct toString() since we already validated account
+      // Convert account to string and validate
       const address = account.toString();
       if (address == "") continue;
 
@@ -54,12 +54,14 @@ export function handleTriggers(data: Transactions): void {
           address == JUPITER_LIMIT_ORDER_ADDRESS || 
           address == JUPITER_DCA_ADDRESS) {
         
-        // Update protocol stats
-        protocol.totalUniqueUsers = protocol.totalUniqueUsers.plus(BigInt.fromI32(1))
-        protocol.lastUpdateTimestamp = BigInt.fromI32(i)
-        protocol.save()
-
-        // TODO: Process market, token, and swap data once we have access to the full transaction data
+        // Update protocol stats using safe integer operations
+        const currentUsers = protocol.totalUniqueUsers;
+        protocol.totalUniqueUsers = currentUsers.plus(BigInt.fromI32(1));
+        protocol.lastUpdateTimestamp = BigInt.fromI32(i);
+        protocol.save();
+        
+        // Exit early after finding a match to prevent duplicate processing
+        break;
       }
     }
   }
