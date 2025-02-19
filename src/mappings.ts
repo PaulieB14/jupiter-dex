@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, TypedMap, Value, JSONValue, Bytes } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal, Bytes } from "@graphprotocol/graph-ts"
 import { Protocol, Market, Token, Swap } from "../generated/schema"
 import { Transactions } from "./pb/sf/substreams/solana/v1/Transactions"
 
@@ -7,17 +7,17 @@ const JUPITER_SWAP_ADDRESS = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
 const JUPITER_LIMIT_ORDER_ADDRESS = "jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu"
 const JUPITER_DCA_ADDRESS = "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M"
 
-// Helper function to safely get string from potentially null bytes
-function safeToString(value: Bytes | null): string {
-  if (!value) return "";
-  return value.toHexString();
-}
-
 // Helper function to check if address is a Jupiter contract
 function isJupiterContract(address: string): boolean {
   return address == JUPITER_SWAP_ADDRESS || 
          address == JUPITER_LIMIT_ORDER_ADDRESS || 
          address == JUPITER_DCA_ADDRESS;
+}
+
+// Helper function to safely convert Uint8Array to string
+function bytesToBase58(bytes: Uint8Array | null): string {
+  if (!bytes) return "";
+  return Bytes.fromUint8Array(bytes).toBase58();
 }
 
 export function handleTriggers(data: Transactions): void {
@@ -49,21 +49,22 @@ export function handleTriggers(data: Transactions): void {
     const message = txData.message;
     if (!message) continue;
 
-    // Handle account keys as nullable array
-    const keys = message.accountKeys;
-    if (!keys) continue;
+    // Handle account keys as Uint8Array array
+    const accountKeys = message.accountKeys;
+    if (!accountKeys) continue;
 
     let foundJupiterContract = false;
     
-    // Process each key, treating them as potentially null bytes
-    for (let j = 0; j < keys.length; j++) {
-      const key = keys[j] as Bytes | null;
-      
-      // Convert key to string safely using helper function
-      const address = safeToString(key);
+    // Process each account key as Uint8Array
+    for (let j = 0; j < accountKeys.length; j++) {
+      const keyBytes = accountKeys[j];
+      if (!keyBytes) continue;
+
+      // Convert bytes to Base58 string (Solana address format)
+      const address = bytesToBase58(keyBytes);
       if (address == "") continue;
 
-      // Check if this is a Jupiter contract using helper function
+      // Check if this is a Jupiter contract
       if (isJupiterContract(address)) {
         foundJupiterContract = true;
         break;
