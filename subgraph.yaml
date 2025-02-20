@@ -7,7 +7,7 @@ dataSources:
     network: mainnet
     source:
       package:
-        moduleName: map_filtered_accounts
+        moduleName: map_jupiter_trades
         file: ./substreams-jupiter-dex/jupiter-dex-v0.1.0.spkg
     mapping:
       kind: substreams/graph-entities

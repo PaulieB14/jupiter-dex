@@ -1,7 +1,8 @@
 version: v1
 plugins:
-  - plugin: as
+  - plugin: buf.build/community/neoeinstein-prost:v0.2.3
     out: src/pb
     opt:
-      - target=graph
-      - module=sf/substreams/v1
+      - bytes=bytes
+      - file_descriptor_set
+      - retain_enum_prefix

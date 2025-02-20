@@ -1,3 +1,4 @@
+#[derive(::prost::Message)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountChange {
@@ -18,6 +19,7 @@ pub struct AccountChange {
     #[prost(bool, tag = "8")]
     pub deleted: bool,
 }
+#[derive(::prost::Message)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountChanges {

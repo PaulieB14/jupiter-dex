@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package sf.solana.type.v1;
 
+// @derive(::prost::Message)
 message ConfirmedTransaction {
     Transaction transaction = 1;
     bytes slot = 2;
@@ -9,17 +10,20 @@ message ConfirmedTransaction {
     bytes meta = 4;
 }
 
+// @derive(::prost::Message)
 message Transaction {
     bytes signatures = 1;
     Message message = 2;
 }
 
+// @derive(::prost::Message)
 message Message {
     repeated bytes account_keys = 1;
     bytes recent_blockhash = 2;
     repeated CompiledInstruction instructions = 3;
 }
 
+// @derive(::prost::Message)
 message CompiledInstruction {
     uint32 program_id_index = 1;
     repeated uint32 accounts = 2;
