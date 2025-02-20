@@ -7,8 +7,8 @@ dataSources:
     network: mainnet
     source:
       package:
-        moduleName: map_filtered_transactions
-        file: ./substreams-jupiter-dex/target/wasm32-unknown-unknown/release/substreams.wasm
+        moduleName: map_filtered_accounts
+        file: ./substreams-jupiter-dex/jupiter-dex-v0.1.0.spkg
     mapping:
       kind: substreams/graph-entities
       apiVersion: 0.0.7

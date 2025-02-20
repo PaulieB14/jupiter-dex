@@ -34,34 +34,28 @@ export function handleTriggers(data: TypedMap<string, JSONValue>): void {
       const typedValue = value.toObject().get("typed_value");
       if (!typedValue) continue;
 
-      switch (name.toString()) {
-        case "slot":
-        case "lamports":
-        case "rentEpoch":
-          const int64Value = typedValue.toObject().get("int64_value");
-          if (int64Value) {
-            entity.setBigInt(name.toString(), int64Value.toBigInt());
-          }
-          break;
-        case "pubkey":
-        case "owner":
-          const stringValue = typedValue.toObject().get("string_value");
-          if (stringValue) {
-            entity.setString(name.toString(), stringValue.toString());
-          }
-          break;
-        case "executable":
-          const boolValue = typedValue.toObject().get("bool_value");
-          if (boolValue) {
-            entity.setBoolean(name.toString(), boolValue.toBool());
-          }
-          break;
-        case "data":
-          const bytesValue = typedValue.toObject().get("bytes_value");
-          if (bytesValue && bytesValue.toString() !== "") {
-            entity.setBytes(name.toString(), Bytes.fromByteArray(Bytes.fromHexString(bytesValue.toString())));
-          }
-          break;
+      const fieldName = name.toString();
+      
+      if (fieldName == "slot" || fieldName == "lamports" || fieldName == "rentEpoch") {
+        const int64Value = typedValue.toObject().get("int64_value");
+        if (int64Value) {
+          entity.setBigInt(fieldName, int64Value.toBigInt());
+        }
+      } else if (fieldName == "pubkey" || fieldName == "owner") {
+        const stringValue = typedValue.toObject().get("string_value");
+        if (stringValue) {
+          entity.setString(fieldName, stringValue.toString());
+        }
+      } else if (fieldName == "executable") {
+        const boolValue = typedValue.toObject().get("bool_value");
+        if (boolValue) {
+          entity.setBoolean(fieldName, boolValue.toBool());
+        }
+      } else if (fieldName == "data") {
+        const bytesValue = typedValue.toObject().get("bytes_value");
+        if (bytesValue && bytesValue.toString() !== "") {
+          entity.setBytes(fieldName, Bytes.fromByteArray(Bytes.fromHexString(bytesValue.toString())));
+        }
       }
     }
     

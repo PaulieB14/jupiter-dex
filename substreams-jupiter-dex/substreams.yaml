@@ -18,7 +18,7 @@ binaries:
     file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
-  - name: map_filtered_transactions
+  - name: map_filtered_accounts
     kind: map
     inputs:
       - source: sf.solana.type.v1.Block

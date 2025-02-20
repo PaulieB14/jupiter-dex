@@ -22,8 +22,7 @@ modules:
     kind: map
     inputs:
       - source: solana:filtered_accounts
-        params:
-          filtered_accounts: "owner:JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 || owner:jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu || owner:DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M"
+        params: owner:JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 || owner:jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu || owner:DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M
     output:
       type: proto:sf.substreams.v1.EntityChanges
 
