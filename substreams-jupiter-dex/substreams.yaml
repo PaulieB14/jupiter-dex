@@ -4,7 +4,7 @@ package:
   version: v0.1.0
 
 imports:
-  solana: ../solana-spl-token-v0.1.0.spkg
+  dex: ./solana-dex-trades.spkg
 
 protobuf:
   files:
@@ -18,7 +18,7 @@ binaries:
     file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
-  - name: map_filtered_accounts
+  - name: map_jupiter_trades
     kind: map
     inputs:
       - source: sf.solana.type.v1.Block

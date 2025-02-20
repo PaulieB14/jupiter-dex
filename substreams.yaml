@@ -4,7 +4,7 @@ package:
   version: v0.1.0
 
 imports:
-  solana: https://github.com/streamingfast/substreams-solana-accounts-foundational/releases/download/v0.1.0/solana-accounts-foundational-v0.1.0.spkg
+  dex: ./substreams-jupiter-dex/solana-dex-trades.spkg
 
 protobuf:
   files:
@@ -18,11 +18,10 @@ binaries:
     file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
-  - name: map_filtered_accounts
+  - name: map_jupiter_trades
     kind: map
     inputs:
-      - source: solana:filtered_accounts
-        params: owner:JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4 || owner:jupoNjAxXgZ4rjzxzPMP4oxduvQsQtZzyknqvzYNrNu || owner:DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M
+      - source: sf.solana.type.v1.Block
     output:
       type: proto:sf.substreams.v1.EntityChanges
 
