@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: substreams
     name: jupiter_dex
-    network: solana
+    network: solana-mainnet
     source:
       package:
         moduleName: map_jupiter_trades
