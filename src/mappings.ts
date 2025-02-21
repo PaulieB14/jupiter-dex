@@ -53,31 +53,54 @@ export function handleTriggers(entityChanges: TypedMap<string, JSONValue>): void
 
   // Handle swaps
   const entities = entityChanges.get("entities");
-  if (entities) {
-    const entitiesArray = entities.toArray();
-    for (let i = 0; i < entitiesArray.length; i++) {
-      const entity = entitiesArray[i].toObject();
-      const type = entity.get("type");
-      if (type && type.toString() == "Swap") {
-        const fields = entity.get("fields");
-        if (!fields) continue;
-        
-        const fieldsObj = fields.toObject();
-        createSwap(
-          fieldsObj.get("id")!.toString(),
-          fieldsObj.get("blockHash")!.toString(),
-          fieldsObj.get("protocol")!.toString(),
-          fieldsObj.get("from")!.toString(),
-          fieldsObj.get("to")!.toString(),
-          BigInt.fromString(fieldsObj.get("slot")!.toString()),
-          BigInt.fromString(fieldsObj.get("blockNumber")!.toString()),
-          BigInt.fromString(fieldsObj.get("timestamp")!.toString()),
-          fieldsObj.get("tokenIn")!.toString(),
-          fieldsObj.get("amountIn")!.toString(),
-          fieldsObj.get("tokenOut")!.toString(),
-          fieldsObj.get("amountOut")!.toString()
-        );
-      }
-    }
+  if (!entities) return;
+
+  const entitiesArray = entities.toArray();
+  for (let i = 0; i < entitiesArray.length; i++) {
+    const entity = entitiesArray[i];
+    if (!entity) continue;
+
+    const entityObj = entity.toObject();
+    if (!entityObj) continue;
+
+    const type = entityObj.get("type");
+    if (!type || type.toString() != "Swap") continue;
+
+    const fields = entityObj.get("fields");
+    if (!fields) continue;
+
+    const fieldsObj = fields.toObject();
+    if (!fieldsObj) continue;
+
+    const id = fieldsObj.get("id");
+    const blockHash = fieldsObj.get("blockHash");
+    const protocol = fieldsObj.get("protocol");
+    const from = fieldsObj.get("from");
+    const to = fieldsObj.get("to");
+    const slot = fieldsObj.get("slot");
+    const blockNumber = fieldsObj.get("blockNumber");
+    const timestamp = fieldsObj.get("timestamp");
+    const tokenIn = fieldsObj.get("tokenIn");
+    const amountIn = fieldsObj.get("amountIn");
+    const tokenOut = fieldsObj.get("tokenOut");
+    const amountOut = fieldsObj.get("amountOut");
+
+    if (!id || !blockHash || !protocol || !from || !to || !slot || !blockNumber || 
+        !timestamp || !tokenIn || !amountIn || !tokenOut || !amountOut) continue;
+
+    createSwap(
+      id.toString(),
+      blockHash.toString(),
+      protocol.toString(),
+      from.toString(),
+      to.toString(),
+      BigInt.fromString(slot.toString()),
+      BigInt.fromString(blockNumber.toString()),
+      BigInt.fromString(timestamp.toString()),
+      tokenIn.toString(),
+      amountIn.toString(),
+      tokenOut.toString(),
+      amountOut.toString()
+    );
   }
 }

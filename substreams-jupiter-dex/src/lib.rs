@@ -35,9 +35,9 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                         // Basic transaction info
                         swap.set("id", swap_id);
                         swap.set("blockHash", bs58::encode(&block.blockhash).into_string());
-                        swap.set("protocol", "jupiter-dex");
-                        swap.set("to", bs58::encode(&message.account_keys[0]).into_string());
+                        swap.set("protocol", program_id_str);
                         swap.set("from", bs58::encode(&message.account_keys[0]).into_string());
+                        swap.set("to", bs58::encode(&message.account_keys[0]).into_string());
                         swap.set("slot", block.slot as i64);
                         swap.set("blockNumber", block.slot as i64);
 
@@ -45,17 +45,19 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                             swap.set("timestamp", block_time.timestamp as i64);
                         }
 
-                        // Token info
+                        // Token info - for now just use the first two token balances
                         if let Some(meta) = &tx.meta {
-                            for balance in meta.post_token_balances.iter() {
-                                let mint = bs58::encode(&balance.mint).into_string();
-                                let amount = balance.ui_token_amount.as_ref().unwrap().ui_amount;
-                                
-                                // For now, just set the first token as tokenIn and second as tokenOut
-                                swap.set("tokenIn", mint.clone());
-                                swap.set("amountIn", amount.to_string());
+                            if let Some(first_balance) = meta.post_token_balances.first() {
+                                let mint = bs58::encode(&first_balance.mint).into_string();
+                                let amount = first_balance.ui_token_amount.as_ref().unwrap().ui_amount.to_string();
+                                swap.set("tokenIn", mint);
+                                swap.set("amountIn", amount);
+                            }
+                            if let Some(second_balance) = meta.post_token_balances.get(1) {
+                                let mint = bs58::encode(&second_balance.mint).into_string();
+                                let amount = second_balance.ui_token_amount.as_ref().unwrap().ui_amount.to_string();
                                 swap.set("tokenOut", mint);
-                                swap.set("amountOut", amount.to_string());
+                                swap.set("amountOut", amount);
                             }
                         }
                     }
