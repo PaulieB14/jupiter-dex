@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: jupiter_dex
-  version: v0.1.0
+  version: v0.2.0
 
 imports:
   dex: ./solana-dex-trades.spkg
@@ -24,4 +24,4 @@ modules:
       - source: sf.solana.type.v1.Block
     output:
       type: proto:sf.substreams.v1.EntityChanges
-    initialBlock: 260000082
+    initialBlock: 322167085

@@ -85,28 +85,73 @@ function createSwap(
 }
 
 export function handleTriggers(data: TypedMap<string, JSONValue>): void {
-  const entityChanges = data.get("entityChanges");
-  if (!entityChanges) return;
+  log.debug("Received data", []);
 
-  const entities = entityChanges.toObject().get("entities");
-  if (!entities) return;
+  // Initialize protocols
+  getOrCreateProtocol(JUPITER_SWAP);
+  getOrCreateProtocol(JUPITER_LIMIT_ORDER);
+  getOrCreateProtocol(JUPITER_DCA);
+
+  // Log that we're processing the data
+  log.debug("Processing data", []);
+
+  // Check if we have entityChanges
+  const entityChanges = data.get("entityChanges");
+  if (!entityChanges || !entityChanges.toObject()) {
+    log.debug("No entityChanges found or invalid format", []);
+    return;
+  }
+  log.debug("Found entityChanges", []);
+
+  // Try to get entities
+  const entityChangesObj = entityChanges.toObject();
+  const entities = entityChangesObj.get("entities");
+  if (!entities || !entities.toArray()) {
+    log.debug("No entities found or invalid format", []);
+    return;
+  }
+  log.debug("Found entities", []);
 
   const entitiesArray = entities.toArray();
+  log.debug("Found {} entities", [entitiesArray.length.toString()]);
+
   for (let i = 0; i < entitiesArray.length; i++) {
     const entity = entitiesArray[i];
-    if (!entity) continue;
+    if (!entity) {
+      log.debug("Entity {} is null", [i.toString()]);
+      continue;
+    }
+
+    if (!entity || !entity.toObject()) {
+      log.debug("Entity {} is invalid", [i.toString()]);
+      continue;
+    }
 
     const entityObj = entity.toObject();
-    if (!entityObj) continue;
-
     const type = entityObj.get("type");
-    if (!type || type.toString() != "Swap") continue;
+    if (!type) {
+      log.debug("Type is null for entity {}", [i.toString()]);
+      continue;
+    }
+    log.debug("Entity {} type: {}", [i.toString(), type.toString()]);
+
+    if (type.toString() != "Swap") {
+      log.debug("Skipping non-Swap entity {}", [i.toString()]);
+      continue;
+    }
 
     const fields = entityObj.get("fields");
-    if (!fields) continue;
+    if (!fields) {
+      log.debug("Fields is null for entity {}", [i.toString()]);
+      continue;
+    }
+
+    if (!fields || !fields.toObject()) {
+      log.debug("Fields is invalid for entity {}", [i.toString()]);
+      continue;
+    }
 
     const fieldsObj = fields.toObject();
-    if (!fieldsObj) continue;
 
     const id = fieldsObj.get("id");
     const blockHash = fieldsObj.get("blockHash");
@@ -122,7 +167,12 @@ export function handleTriggers(data: TypedMap<string, JSONValue>): void {
     const amountOut = fieldsObj.get("amountOut");
 
     if (!id || !blockHash || !protocol || !from || !to || !slot || !blockNumber || 
-        !timestamp || !tokenIn || !amountIn || !tokenOut || !amountOut) continue;
+        !timestamp || !tokenIn || !amountIn || !tokenOut || !amountOut) {
+      log.debug("Missing required fields for entity {}", [i.toString()]);
+      continue;
+    }
+
+    log.debug("Creating swap with id: {}", [id.toString()]);
 
     createSwap(
       id.toString(),

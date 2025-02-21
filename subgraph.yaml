@@ -8,7 +8,7 @@ dataSources:
     source:
       package:
         moduleName: map_jupiter_trades
-        file: ./substreams-jupiter-dex/jupiter-dex-v0.1.0.spkg
+        file: ./substreams-jupiter-dex/jupiter-dex-v0.2.0.spkg
     mapping:
       kind: substreams/graph-entities
       apiVersion: 0.0.7
