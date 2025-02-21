@@ -85,108 +85,92 @@ function createSwap(
 }
 
 export function handleTriggers(data: TypedMap<string, JSONValue>): void {
-  log.debug("Received data", []);
+  // Initialize protocols only once
+  const protocols = [JUPITER_SWAP, JUPITER_LIMIT_ORDER, JUPITER_DCA];
+  for (let i = 0; i < protocols.length; i++) {
+    getOrCreateProtocol(protocols[i]);
+  }
 
-  // Initialize protocols
-  getOrCreateProtocol(JUPITER_SWAP);
-  getOrCreateProtocol(JUPITER_LIMIT_ORDER);
-  getOrCreateProtocol(JUPITER_DCA);
-
-  // Log that we're processing the data
-  log.debug("Processing data", []);
-
-  // Check if we have entityChanges
+  // Safely get entityChanges
   const entityChanges = data.get("entityChanges");
-  if (!entityChanges || !entityChanges.toObject()) {
-    log.debug("No entityChanges found or invalid format", []);
+  if (!entityChanges) {
+    log.debug("No entityChanges found", []);
     return;
   }
-  log.debug("Found entityChanges", []);
-
-  // Try to get entities
+  
   const entityChangesObj = entityChanges.toObject();
-  const entities = entityChangesObj.get("entities");
-  if (!entities || !entities.toArray()) {
-    log.debug("No entities found or invalid format", []);
+  if (!entityChangesObj) {
+    log.debug("Invalid entityChanges format", []);
     return;
   }
-  log.debug("Found entities", []);
+
+  const entities = entityChangesObj.get("entities");
+  if (!entities) {
+    log.debug("No entities found", []);
+    return;
+  }
 
   const entitiesArray = entities.toArray();
-  log.debug("Found {} entities", [entitiesArray.length.toString()]);
+  if (!entitiesArray) {
+    log.debug("Invalid entities format", []);
+    return;
+  }
 
+  // Process each entity
   for (let i = 0; i < entitiesArray.length; i++) {
     const entity = entitiesArray[i];
-    if (!entity) {
-      log.debug("Entity {} is null", [i.toString()]);
-      continue;
-    }
-
-    if (!entity || !entity.toObject()) {
-      log.debug("Entity {} is invalid", [i.toString()]);
-      continue;
-    }
+    if (!entity) continue;
 
     const entityObj = entity.toObject();
+    if (!entityObj) continue;
+
+    // Check if it's a Swap entity
     const type = entityObj.get("type");
-    if (!type) {
-      log.debug("Type is null for entity {}", [i.toString()]);
-      continue;
-    }
-    log.debug("Entity {} type: {}", [i.toString(), type.toString()]);
+    if (!type || type.toString() != "Swap") continue;
 
-    if (type.toString() != "Swap") {
-      log.debug("Skipping non-Swap entity {}", [i.toString()]);
-      continue;
-    }
-
+    // Get fields safely
     const fields = entityObj.get("fields");
-    if (!fields) {
-      log.debug("Fields is null for entity {}", [i.toString()]);
-      continue;
-    }
-
-    if (!fields || !fields.toObject()) {
-      log.debug("Fields is invalid for entity {}", [i.toString()]);
-      continue;
-    }
+    if (!fields) continue;
 
     const fieldsObj = fields.toObject();
+    if (!fieldsObj) continue;
 
-    const id = fieldsObj.get("id");
-    const blockHash = fieldsObj.get("blockHash");
-    const protocol = fieldsObj.get("protocol");
-    const from = fieldsObj.get("from");
-    const to = fieldsObj.get("to");
-    const slot = fieldsObj.get("slot");
-    const blockNumber = fieldsObj.get("blockNumber");
-    const timestamp = fieldsObj.get("timestamp");
-    const tokenIn = fieldsObj.get("tokenIn");
-    const amountIn = fieldsObj.get("amountIn");
-    const tokenOut = fieldsObj.get("tokenOut");
-    const amountOut = fieldsObj.get("amountOut");
-
-    if (!id || !blockHash || !protocol || !from || !to || !slot || !blockNumber || 
-        !timestamp || !tokenIn || !amountIn || !tokenOut || !amountOut) {
-      log.debug("Missing required fields for entity {}", [i.toString()]);
-      continue;
+    // Extract all required fields
+    const requiredFields = [
+      "id", "blockHash", "protocol", "from", "to", "slot",
+      "blockNumber", "timestamp", "tokenIn", "amountIn",
+      "tokenOut", "amountOut"
+    ];
+    
+    const values = new Map<string, JSONValue>();
+    let hasAllFields = true;
+    
+    for (let j = 0; j < requiredFields.length; j++) {
+      const field = requiredFields[j];
+      const value = fieldsObj.get(field);
+      if (!value) {
+        hasAllFields = false;
+        break;
+      }
+      values.set(field, value);
     }
+    
+    if (!hasAllFields) continue;
 
-    log.debug("Creating swap with id: {}", [id.toString()]);
-
+    // Create swap with safely extracted values
     createSwap(
-      id.toString(),
-      blockHash.toString(),
-      protocol.toString(),
-      from.toString(),
-      to.toString(),
-      BigInt.fromString(slot.toString()),
-      BigInt.fromString(blockNumber.toString()),
-      BigInt.fromString(timestamp.toString()),
-      tokenIn.toString(),
-      amountIn.toString(),
-      tokenOut.toString(),
-      amountOut.toString()
+      values.get("id")!.toString(),
+      values.get("blockHash")!.toString(),
+      values.get("protocol")!.toString(),
+      values.get("from")!.toString(),
+      values.get("to")!.toString(),
+      BigInt.fromString(values.get("slot")!.toString()),
+      BigInt.fromString(values.get("blockNumber")!.toString()),
+      BigInt.fromString(values.get("timestamp")!.toString()),
+      values.get("tokenIn")!.toString(),
+      values.get("amountIn")!.toString(),
+      values.get("tokenOut")!.toString(),
+      values.get("amountOut")!.toString()
     );
   }
 }

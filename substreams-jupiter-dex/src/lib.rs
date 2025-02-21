@@ -230,7 +230,13 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                             continue;
                         }
 
-                        let program_id = &message.account_keys[instruction.program_id_index as usize];
+                            // Add bounds check
+                            if (instruction.program_id_index as usize) >= message.account_keys.len() {
+                                log::info!("Invalid program_id_index {} for account_keys length {}", 
+                                    instruction.program_id_index, message.account_keys.len());
+                                continue;
+                            }
+                            let program_id = &message.account_keys[instruction.program_id_index as usize];
                         let program_id_str = bs58::encode(program_id).into_string();
                         
                         // Log instruction details
@@ -240,6 +246,7 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                             program_id_str,
                             instruction.data.len(),
                             instruction.accounts.iter()
+                                .filter(|&idx| (*idx as usize) < message.account_keys.len())
                                 .map(|&idx| bs58::encode(&message.account_keys[idx as usize]).into_string())
                                 .collect::<Vec<_>>()
                         );
@@ -290,6 +297,7 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
 
                         // Also check if any account in the instruction references Jupiter AMMs
                         let has_jupiter_account = instruction.accounts.iter()
+                            .filter(|&idx| (*idx as usize) < message.account_keys.len())
                             .any(|&idx| {
                                 let account = bs58::encode(&message.account_keys[idx as usize]).into_string();
                                 JUPITER_AMMS.contains(&account.as_str())
@@ -333,6 +341,7 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                                 program_id_str,
                                 inner_inst.data.len(),
                                 inner_inst.accounts.iter()
+                                    .filter(|&idx| (*idx as usize) < message.account_keys.len())
                                     .map(|&idx| bs58::encode(&message.account_keys[idx as usize]).into_string())
                                     .collect::<Vec<_>>()
                             );
@@ -380,6 +389,7 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
 
                             // Also check if any account in the instruction references Jupiter AMMs
                             let has_jupiter_account = inner_inst.accounts.iter()
+                                .filter(|&idx| (*idx as usize) < message.account_keys.len())
                                 .any(|&idx| {
                                     let account = bs58::encode(&message.account_keys[idx as usize]).into_string();
                                     JUPITER_AMMS.contains(&account.as_str())
