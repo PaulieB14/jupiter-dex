@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, Entity, store } from "@graphprotocol/graph-ts";
+import { BigInt, Entity, store, TypedMap, JSONValue } from "@graphprotocol/graph-ts";
 
 // Protocol addresses
 const JUPITER_SWAP = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
@@ -45,31 +45,37 @@ function createSwap(
   store.set("Swap", id, swap);
 }
 
-export function handleTriggers(entityChanges: any): void {
+export function handleTriggers(entityChanges: TypedMap<string, JSONValue>): void {
   // Initialize protocols
   getOrCreateProtocol(JUPITER_SWAP);
   getOrCreateProtocol(JUPITER_LIMIT_ORDER);
   getOrCreateProtocol(JUPITER_DCA);
 
   // Handle swaps
-  if (entityChanges.entities) {
-    for (let i = 0; i < entityChanges.entities.length; i++) {
-      const entity = entityChanges.entities[i];
-      if (entity.type == "Swap") {
-        const fields = entity.fields;
+  const entities = entityChanges.get("entities");
+  if (entities) {
+    const entitiesArray = entities.toArray();
+    for (let i = 0; i < entitiesArray.length; i++) {
+      const entity = entitiesArray[i].toObject();
+      const type = entity.get("type");
+      if (type && type.toString() == "Swap") {
+        const fields = entity.get("fields");
+        if (!fields) continue;
+        
+        const fieldsObj = fields.toObject();
         createSwap(
-          fields.id,
-          fields.blockHash,
-          fields.protocol,
-          fields.from,
-          fields.to,
-          BigInt.fromString(fields.slot.toString()),
-          BigInt.fromString(fields.blockNumber.toString()),
-          BigInt.fromString(fields.timestamp.toString()),
-          fields.tokenIn,
-          fields.amountIn,
-          fields.tokenOut,
-          fields.amountOut
+          fieldsObj.get("id")!.toString(),
+          fieldsObj.get("blockHash")!.toString(),
+          fieldsObj.get("protocol")!.toString(),
+          fieldsObj.get("from")!.toString(),
+          fieldsObj.get("to")!.toString(),
+          BigInt.fromString(fieldsObj.get("slot")!.toString()),
+          BigInt.fromString(fieldsObj.get("blockNumber")!.toString()),
+          BigInt.fromString(fieldsObj.get("timestamp")!.toString()),
+          fieldsObj.get("tokenIn")!.toString(),
+          fieldsObj.get("amountIn")!.toString(),
+          fieldsObj.get("tokenOut")!.toString(),
+          fieldsObj.get("amountOut")!.toString()
         );
       }
     }
