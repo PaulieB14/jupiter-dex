@@ -15,10 +15,4 @@ lint:
     - RPC_RESPONSE_STANDARD_NAME
     - PACKAGE_DIRECTORY_MATCH
 build:
-  roots:
-    - proto
   excludes: []
-  external_plugins:
-    - name: prost-crate
-      out: src/pb
-      opt: lang=rust,paths=source_relative

@@ -1,0 +1,1 @@
+{"rustc":2497478894085024098,"features":"","target":0,"profile":0,"path":0,"deps":[[10282088956950256607,"build_script_build",false,1120731330562565921]],"local":[{"RerunIfChanged":{"output":"wasm32-unknown-unknown/release/build/pbjson-types-f43e688e7f63388c/output","paths":["descriptors.bin"]}}],"rustflags":[],"metadata":0,"config":0,"compile_kind":0}

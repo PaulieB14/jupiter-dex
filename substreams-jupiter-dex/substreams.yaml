@@ -9,8 +9,6 @@ imports:
 protobuf:
   files:
     - proto/sf/substreams/v1/entities.proto
-    - proto/sf/solana/type/v1/type.proto
-    - proto/sf/solana/type/v1/block.proto
   importPaths:
     - proto
 

@@ -12,4 +12,31 @@ message JupiterTransaction {
     bytes signature = 3;
     bytes program_id = 4;
     repeated bytes account_keys = 5;
+    string tx_id = 6;
+    int64 tx_index = 7;
+    string signer = 8;
+    string pool_address = 9;
+    string base_mint = 10;
+    string quote_mint = 11;
+    double base_amount = 12;
+    double quote_amount = 13;
+    string trader = 14;
+    string base_vault = 15;
+    string quote_vault = 16;
+    bool is_inner_instruction = 17;
+    uint32 instruction_index = 18;
+    string instruction_type = 19;
+    uint32 inner_instruction_index = 20;
+    string outer_program = 21;
+    string inner_program = 22;
+    uint64 txn_fee_lamports = 23;
+    int64 signer_lamports_change = 24;
+    repeated string outer_executing_accounts = 25;
+    int64 trader_lamports_change = 26;
+    repeated TokenBalanceChange trader_token_balance_changes = 27;
+}
+
+message TokenBalanceChange {
+    string mint = 1;
+    double amount = 2;
 }

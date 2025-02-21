@@ -1,8 +1,14 @@
 version: v1
 plugins:
-  - plugin: buf.build/community/neoeinstein-prost:v0.2.3
+  - plugin: buf.build/community/neoeinstein-prost:v0.3.1
     out: src/pb
     opt:
       - bytes=bytes
       - file_descriptor_set
       - retain_enum_prefix
+      - compile_well_known_types
+      - extern_path=.google.protobuf=::pbjson_types
+  - plugin: buf.build/community/neoeinstein-prost-crate:v0.3.1
+    out: src/pb
+    opt:
+      - no_features
