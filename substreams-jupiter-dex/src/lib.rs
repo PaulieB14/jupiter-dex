@@ -28,33 +28,34 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                     
                     if program_id_str == JUPITER_SWAP || program_id_str == JUPITER_LIMIT_ORDER || program_id_str == JUPITER_DCA {
                         let tx_id = bs58::encode(&transaction.signatures[0]).into_string();
+                        let swap_id = format!("swap-{}", tx_id);
                         
-                        let trade = tables.create_row("Trade", &tx_id);
+                        let swap = tables.create_row("Swap", &swap_id);
                         
                         // Basic transaction info
-                        trade.set("id", tx_id);
-                        trade.set("program_id", program_id_str);
+                        swap.set("id", swap_id);
+                        swap.set("blockHash", bs58::encode(&block.blockhash).into_string());
+                        swap.set("protocol", "jupiter-dex");
+                        swap.set("to", bs58::encode(&message.account_keys[0]).into_string());
+                        swap.set("from", bs58::encode(&message.account_keys[0]).into_string());
+                        swap.set("slot", block.slot as i64);
+                        swap.set("blockNumber", block.slot as i64);
 
-                        // Block info
-                        trade.set("slot", block.slot as i64);
                         if let Some(block_time) = block.block_time.as_ref() {
-                            trade.set("block_time", block_time.timestamp as i64);
+                            swap.set("timestamp", block_time.timestamp as i64);
                         }
-                        trade.set("block_hash", bs58::encode(&block.blockhash).into_string());
 
-                        // Signer info
-                        trade.set("signer", bs58::encode(&message.account_keys[0]).into_string());
-
-                        // Transaction fee
+                        // Token info
                         if let Some(meta) = &tx.meta {
-                            trade.set("fee", meta.fee as i64);
-
-                            // Token balances
                             for balance in meta.post_token_balances.iter() {
                                 let mint = bs58::encode(&balance.mint).into_string();
                                 let amount = balance.ui_token_amount.as_ref().unwrap().ui_amount;
-                                let field_name = format!("token_balance_{}", mint);
-                                trade.set(&field_name, amount.to_string());
+                                
+                                // For now, just set the first token as tokenIn and second as tokenOut
+                                swap.set("tokenIn", mint.clone());
+                                swap.set("amountIn", amount.to_string());
+                                swap.set("tokenOut", mint);
+                                swap.set("amountOut", amount.to_string());
                             }
                         }
                     }
