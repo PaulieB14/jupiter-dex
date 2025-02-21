@@ -1,4 +1,5 @@
 use substreams::errors::Error;
+use substreams::log;
 use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_entity_change::tables::Tables;
 use substreams_solana::pb::sf::solana::r#type::v1::Block;
@@ -13,12 +14,15 @@ const JUPITER_DCA: &str = "DCA265Vj8a9CEuX1eb1LWRnDT7uK6q1xMipnNyatn23M";
 pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
     let mut tables = Tables::new();
 
+    log::info!("Processing block {}", block.slot);
+
     // Create protocol entities
     for protocol_id in [JUPITER_SWAP, JUPITER_LIMIT_ORDER, JUPITER_DCA] {
         let protocol = tables.create_row("Protocol", protocol_id);
         protocol.set("id", protocol_id);
         protocol.set("cumulativeUniqueUsers", 0i64);
         protocol.set("totalPoolCount", 0i64);
+        log::info!("Created protocol entity {}", protocol_id);
     }
 
     for tx in block.transactions.iter() {
@@ -38,6 +42,8 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                         let tx_id = bs58::encode(&transaction.signatures[0]).into_string();
                         let swap_id = format!("swap-{}", tx_id);
                         
+                        log::info!("Found Jupiter transaction {}", swap_id);
+                        
                         // Create pool entity
                         if let Some(meta) = &tx.meta {
                             if let Some(first_balance) = meta.post_token_balances.first() {
@@ -45,6 +51,8 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                                     let token_in = bs58::encode(&first_balance.mint).into_string();
                                     let token_out = bs58::encode(&second_balance.mint).into_string();
                                     let pool_id = format!("{}-{}-{}", program_id_str, token_in, token_out);
+                                    
+                                    log::info!("Creating pool entity {}", pool_id);
                                     
                                     let pool = tables.create_row("LiquidityPool", &pool_id);
                                     pool.set("id", &pool_id);
@@ -58,6 +66,8 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                                     pool.set("createdBlockNumber", block.slot as i64);
 
                                     // Create swap entity
+                                    log::info!("Creating swap entity {}", swap_id);
+                                    
                                     let swap = tables.create_row("Swap", &swap_id);
                                     swap.set("id", &swap_id);
                                     swap.set("blockHash", bs58::encode(&block.blockhash).into_string());
@@ -86,5 +96,8 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
         }
     }
 
-    Ok(tables.to_entity_changes())
+    let changes = tables.to_entity_changes();
+    log::info!("Generated {} entity changes", changes.entity_changes.len());
+    
+    Ok(changes)
 }

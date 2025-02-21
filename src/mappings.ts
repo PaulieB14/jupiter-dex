@@ -1,4 +1,4 @@
-import { BigInt, Entity, store, TypedMap, JSONValue, Value } from "@graphprotocol/graph-ts";
+import { BigInt, Entity, store, TypedMap, JSONValue, Value, log } from "@graphprotocol/graph-ts";
 
 // Protocol addresses
 const JUPITER_SWAP = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
@@ -21,11 +21,24 @@ function getOrCreateLiquidityPool(id: string, protocolId: string, inputTokens: s
     const pool = new Entity();
     pool.setString("id", id);
     pool.setString("protocol", protocolId);
-    pool.set("inputTokens", Value.fromStringArray(inputTokens));
+    
+    // Convert string array to Value array
+    const inputTokenValues: Value[] = [];
+    for (let i = 0; i < inputTokens.length; i++) {
+      inputTokenValues.push(Value.fromString(inputTokens[i]));
+    }
+    pool.set("inputTokens", Value.fromArray(inputTokenValues));
+    
     pool.setBigInt("token0Balance", BigInt.zero());
     pool.setBigInt("token1Balance", BigInt.zero());
     pool.setBigInt("outputTokenSupply", BigInt.zero());
-    pool.set("cumulativeVolumeByTokenAmount", Value.fromBigIntArray([BigInt.zero(), BigInt.zero()]));
+    
+    // Convert string array to Value array for volume
+    const volumeValues: Value[] = [];
+    volumeValues.push(Value.fromString("0"));
+    volumeValues.push(Value.fromString("0"));
+    pool.set("cumulativeVolumeByTokenAmount", Value.fromArray(volumeValues));
+    
     pool.setBigInt("createdTimestamp", BigInt.zero());
     pool.setBigInt("createdBlockNumber", BigInt.zero());
     store.set("LiquidityPool", id, pool);
@@ -71,9 +84,11 @@ function createSwap(
   store.set("Swap", id, swap);
 }
 
-export function handleTriggers(entityChanges: TypedMap<string, JSONValue>): void {
-  // Handle swaps
-  const entities = entityChanges.get("entities");
+export function handleTriggers(data: TypedMap<string, JSONValue>): void {
+  const entityChanges = data.get("entityChanges");
+  if (!entityChanges) return;
+
+  const entities = entityChanges.toObject().get("entities");
   if (!entities) return;
 
   const entitiesArray = entities.toArray();
