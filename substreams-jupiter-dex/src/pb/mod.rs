@@ -1,14 +1,1 @@
-pub mod sf {
-    pub mod solana {
-        pub mod r#type {
-            pub mod v1 {
-                include!("sf.solana.type.v1.rs");
-            }
-        }
-    }
-    pub mod substreams {
-        pub mod v1 {
-            include!("sf.substreams.v1.rs");
-        }
-    }
-}
+// Empty module - all types are imported directly in lib.rs
