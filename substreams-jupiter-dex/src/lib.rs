@@ -3,8 +3,6 @@ use substreams::log;
 use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_entity_change::tables::Tables;
 use substreams_solana::pb::sf::solana::r#type::v1::Block;
-use substreams_solana::Address; // Added for safer address handling
-use substreams_solana::Instruction; // Added for instruction trait
 
 mod pb;
 
@@ -111,12 +109,9 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
     log::info!("- Slot: {} (target: {}, match: {})", 
         block.slot, TARGET_BLOCK, block.slot == TARGET_BLOCK);
     
-    // Use Address for safer handling of blockhash
-    let blockhash = Address::from_slice(&block.blockhash);
-    let prev_blockhash = Address::from_slice(&block.previous_blockhash);
-    
-    log::info!("- Hash: {}", blockhash.to_string());
-    log::info!("- Parent Hash: {}", prev_blockhash.to_string());
+    // Use safer handling of blockhash
+    log::info!("- Hash: {}", bs58::encode(&block.blockhash).into_string());
+    log::info!("- Parent Hash: {}", bs58::encode(&block.previous_blockhash).into_string());
     log::info!("- Timestamp: {}", block.block_time.as_ref().map_or("Unknown".to_string(), |bt| bt.timestamp.to_string()));
     log::info!("- Transactions: {}", block.transactions.len());
     log::info!("- Failed Transactions: {}", block.transactions.iter()
@@ -153,9 +148,9 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
             .map(|sig| sig.as_slice())
             .unwrap_or(&[]);
             
-        // Use Address for safer handling
+        // Use safer handling
         let tx_signature = if !raw_sig.is_empty() {
-            Address::from_slice(raw_sig).to_string()
+            bs58::encode(raw_sig).into_string()
         } else {
             "unknown".to_string()
         };
@@ -175,13 +170,10 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                         continue; // Skip entries with empty mint addresses
                     }
                     
-                    let mint_address = Address::from_slice(&balance.mint);
-                    let owner_address = Address::from_slice(&balance.owner);
-                    
                     log::info!("Pre balance {}: Mint: {}, Owner: {}, Amount: {:?}", 
                         idx,
-                        mint_address.to_string(),
-                        owner_address.to_string(),
+                        bs58::encode(&balance.mint).into_string(),
+                        bs58::encode(&balance.owner).into_string(),
                         balance.ui_token_amount.as_ref().map(|a| a.ui_amount)
                     );
                 }
@@ -191,13 +183,10 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
                         continue; // Skip entries with empty mint addresses
                     }
                     
-                    let mint_address = Address::from_slice(&balance.mint);
-                    let owner_address = Address::from_slice(&balance.owner);
-                    
                     log::info!("Post balance {}: Mint: {}, Owner: {}, Amount: {:?}",
                         idx,
-                        mint_address.to_string(),
-                        owner_address.to_string(),
+                        bs58::encode(&balance.mint).into_string(),
+                        bs58::encode(&balance.owner).into_string(),
                         balance.ui_token_amount.as_ref().map(|a| a.ui_amount)
                     );
                 }
@@ -277,7 +266,7 @@ fn process_jupiter_instruction(
 ) -> Result<(), Error> {
     // Use safer transaction ID handling
     let tx_id = if !transaction.signatures.is_empty() {
-        Address::from_slice(&transaction.signatures[0]).to_string()
+        bs58::encode(&transaction.signatures[0]).into_string()
     } else {
         "unknown".to_string()
     };
@@ -305,8 +294,7 @@ fn process_jupiter_instruction(
                 continue;
             }
             
-            let mint_address = Address::from_slice(&pre_balance.mint);
-            let mint = mint_address.to_string();
+            let mint = bs58::encode(&pre_balance.mint).into_string();
             
             let pre_amount = pre_balance.ui_token_amount.as_ref()
                 .map(|a| a.ui_amount)
@@ -331,8 +319,7 @@ fn process_jupiter_instruction(
                 continue;
             }
             
-            let mint_address = Address::from_slice(&post_balance.mint);
-            let mint = mint_address.to_string();
+            let mint = bs58::encode(&post_balance.mint).into_string();
             
             let post_amount = post_balance.ui_token_amount.as_ref()
                 .map(|a| a.ui_amount)
@@ -380,19 +367,16 @@ fn process_jupiter_instruction(
             pool.set("createdTimestamp", block.block_time.as_ref().map_or(0i64, |bt| bt.timestamp));
             pool.set("createdBlockNumber", block.slot as i64);
 
-            // Use Address for safer handling of blockhash
-            let blockhash = Address::from_slice(&block.blockhash);
-            
             // Create swap entity
             let swap = tables.create_row("Swap", &swap_id);
             swap.set("id", &swap_id);
-            swap.set("blockHash", blockhash.to_string());
+            swap.set("blockHash", bs58::encode(&block.blockhash).into_string());
             swap.set("protocol", program_id_str);
             swap.set("pool", &pool_id);
             
-            // Add bounds check for account keys and use Address for safer handling
+            // Add bounds check for account keys and use safer handling
             let from_key = if !message.account_keys.is_empty() {
-                Address::from_slice(&message.account_keys[0]).to_string()
+                bs58::encode(&message.account_keys[0]).into_string()
             } else {
                 "unknown".to_string()
             };
