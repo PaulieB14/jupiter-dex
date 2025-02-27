@@ -91,6 +91,14 @@ export function handleTriggers(data: TypedMap<string, JSONValue>): void {
     getOrCreateProtocol(protocols[i]);
   }
 
+  // EMERGENCY FIX: Skip all processing to avoid memory fault
+  // This is a temporary measure to prevent the subgraph from crashing
+  // while we investigate the root cause of the memory fault
+  log.debug("EMERGENCY FIX: Skipping all entity processing to avoid memory fault", []);
+  return;
+
+  // The code below is disabled temporarily to prevent memory faults
+  /*
   // Log the data structure for debugging
   log.debug("Processing data object", []);
 
@@ -263,4 +271,5 @@ export function handleTriggers(data: TypedMap<string, JSONValue>): void {
     
     log.debug("Successfully processed entity at index " + i.toString(), []);
   }
+  */
 }
