@@ -2,7 +2,7 @@ use substreams::errors::Error;
 use substreams::log;
 use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_entity_change::tables::Tables;
-use substreams_solana::pb::sf::solana::type::v1::Block;
+use substreams_solana::pb::sf::solana::r#type::v1::Block;
 
 mod pb;
 
@@ -257,9 +257,9 @@ pub fn map_jupiter_trades(block: Block) -> Result<EntityChanges, Error> {
 }
 
 fn process_jupiter_instruction(
-    tx: &substreams_solana::pb::sf::solana::type::v1::ConfirmedTransaction,
-    transaction: &substreams_solana::pb::sf::solana::type::v1::Transaction,
-    message: &substreams_solana::pb::sf::solana::type::v1::Message,
+    tx: &substreams_solana::pb::sf::solana::r#type::v1::ConfirmedTransaction,
+    transaction: &substreams_solana::pb::sf::solana::r#type::v1::Transaction,
+    message: &substreams_solana::pb::sf::solana::r#type::v1::Message,
     program_id_str: &str,
     tables: &mut Tables,
     block: &Block,
