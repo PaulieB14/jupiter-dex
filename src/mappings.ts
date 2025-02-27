@@ -91,7 +91,15 @@ export function handleTriggers(data: TypedMap<string, JSONValue>): void {
     getOrCreateProtocol(protocols[i]);
   }
 
+  // Log the data structure for debugging
+  log.debug("Processing data object", []);
+
   // Safely get entityChanges
+  if (!data) {
+    log.debug("Data is null or undefined", []);
+    return;
+  }
+
   const entityChanges = data.get("entityChanges");
   if (!entityChanges) {
     log.debug("No entityChanges found", []);
@@ -116,24 +124,47 @@ export function handleTriggers(data: TypedMap<string, JSONValue>): void {
     return;
   }
 
+  log.debug("Found " + entitiesArray.length.toString() + " entities", []);
+
   // Process each entity
   for (let i = 0; i < entitiesArray.length; i++) {
     const entity = entitiesArray[i];
-    if (!entity) continue;
+    if (!entity) {
+      log.debug("Entity at index " + i.toString() + " is null", []);
+      continue;
+    }
 
     const entityObj = entity.toObject();
-    if (!entityObj) continue;
+    if (!entityObj) {
+      log.debug("EntityObj at index " + i.toString() + " is null", []);
+      continue;
+    }
 
     // Check if it's a Swap entity
     const type = entityObj.get("type");
-    if (!type || type.toString() != "Swap") continue;
+    if (!type) {
+      log.debug("Entity at index " + i.toString() + " has no type", []);
+      continue;
+    }
+    
+    const typeStr = type.toString();
+    if (typeStr != "Swap") {
+      log.debug("Entity at index " + i.toString() + " is not a Swap: " + typeStr, []);
+      continue;
+    }
 
     // Get fields safely
     const fields = entityObj.get("fields");
-    if (!fields) continue;
+    if (!fields) {
+      log.debug("No fields found for entity at index " + i.toString(), []);
+      continue;
+    }
 
     const fieldsObj = fields.toObject();
-    if (!fieldsObj) continue;
+    if (!fieldsObj) {
+      log.debug("Invalid fields format for entity at index " + i.toString(), []);
+      continue;
+    }
 
     // Extract all required fields
     const requiredFields = [
@@ -144,33 +175,92 @@ export function handleTriggers(data: TypedMap<string, JSONValue>): void {
     
     const values = new Map<string, JSONValue>();
     let hasAllFields = true;
+    let missingField = "";
     
     for (let j = 0; j < requiredFields.length; j++) {
       const field = requiredFields[j];
       const value = fieldsObj.get(field);
       if (!value) {
         hasAllFields = false;
+        missingField = field;
+        log.debug("Missing required field: " + field + " for entity at index " + i.toString(), []);
         break;
       }
       values.set(field, value);
     }
     
-    if (!hasAllFields) continue;
+    if (!hasAllFields) {
+      log.debug("Skipping entity at index " + i.toString() + " due to missing field: " + missingField, []);
+      continue;
+    }
 
+    // Get values with safe fallbacks
+    const idValue = values.get("id");
+    const blockHashValue = values.get("blockHash");
+    const protocolValue = values.get("protocol");
+    const fromValue = values.get("from");
+    const toValue = values.get("to");
+    const slotValue = values.get("slot");
+    const blockNumberValue = values.get("blockNumber");
+    const timestampValue = values.get("timestamp");
+    const tokenInValue = values.get("tokenIn");
+    const amountInValue = values.get("amountIn");
+    const tokenOutValue = values.get("tokenOut");
+    const amountOutValue = values.get("amountOut");
+    
+    // Safely convert values with fallbacks
+    const id = idValue ? idValue.toString() : "";
+    const blockHash = blockHashValue ? blockHashValue.toString() : "";
+    const protocol = protocolValue ? protocolValue.toString() : "";
+    const from = fromValue ? fromValue.toString() : "";
+    const to = toValue ? toValue.toString() : "";
+    
+    // Safely convert numeric values
+    let slot = BigInt.zero();
+    if (slotValue) {
+      const slotStr = slotValue.toString();
+      if (slotStr && slotStr.length > 0) {
+        slot = BigInt.fromString(slotStr);
+      }
+    }
+    
+    let blockNumber = BigInt.zero();
+    if (blockNumberValue) {
+      const blockNumberStr = blockNumberValue.toString();
+      if (blockNumberStr && blockNumberStr.length > 0) {
+        blockNumber = BigInt.fromString(blockNumberStr);
+      }
+    }
+    
+    let timestamp = BigInt.zero();
+    if (timestampValue) {
+      const timestampStr = timestampValue.toString();
+      if (timestampStr && timestampStr.length > 0) {
+        timestamp = BigInt.fromString(timestampStr);
+      }
+    }
+    
+    const tokenIn = tokenInValue ? tokenInValue.toString() : "";
+    const amountIn = amountInValue ? amountInValue.toString() : "0";
+    const tokenOut = tokenOutValue ? tokenOutValue.toString() : "";
+    const amountOut = amountOutValue ? amountOutValue.toString() : "0";
+    
     // Create swap with safely extracted values
     createSwap(
-      values.get("id")!.toString(),
-      values.get("blockHash")!.toString(),
-      values.get("protocol")!.toString(),
-      values.get("from")!.toString(),
-      values.get("to")!.toString(),
-      BigInt.fromString(values.get("slot")!.toString()),
-      BigInt.fromString(values.get("blockNumber")!.toString()),
-      BigInt.fromString(values.get("timestamp")!.toString()),
-      values.get("tokenIn")!.toString(),
-      values.get("amountIn")!.toString(),
-      values.get("tokenOut")!.toString(),
-      values.get("amountOut")!.toString()
+      id,
+      blockHash,
+      protocol,
+      from,
+      to,
+      slot,
+      blockNumber,
+      timestamp,
+      tokenIn,
+      amountIn,
+      tokenOut,
+      amountOut
     );
+    
+    log.debug("Successfully processed entity at index " + i.toString(), []);
   }
 }
